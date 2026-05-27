@@ -44,7 +44,7 @@ export default function App({
   onFilterToggle,
 }: AppProps) {
   
-  const handleSubmit = (e: SubmitEvent) => {
+  const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     onSubmit();
   };
@@ -158,7 +158,7 @@ export default function App({
             ) : searchResults ? (
               <div className="grid grid-6">
                 {searchResults.map((a, i) => (
-                  <AnimeCard key={a.id} anime={a} variant={cardVariant} index={i} />
+                  <AnimeCard key={a.mal_id} anime={a} variant={cardVariant} index={i} />
                 ))}
               </div>
             ) : null}
@@ -184,7 +184,7 @@ export default function App({
               ) : (
                 <div className="grid grid-6">
                   {trending.slice(0, 12).map((a, i) => (
-                    <AnimeCard key={a.id} anime={a} variant={cardVariant} index={i} />
+                    <AnimeCard key={a.mal_id} anime={a} variant={cardVariant} index={i} />
                   ))}
                 </div>
               )}
@@ -209,7 +209,7 @@ export default function App({
               ) : (
                 <div className="grid grid-6">
                   {seasonal.slice(0, 12).map((a, i) => (
-                    <AnimeCard key={a.id} anime={a} variant={cardVariant} index={i} />
+                    <AnimeCard key={a.mal_id} anime={a} variant={cardVariant} index={i} />
                   ))}
                 </div>
               )}

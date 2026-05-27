@@ -29,48 +29,90 @@ import type { ActiveFilters, Anime  } from './types';
 // the types:
 // error
 
-const [error, setError] = useState<Error | null>(null);
-const [loading, setLoading] = useState<boolean>(false);
-const [query, setQuery] = useState<string>('');
-const [submitted, setSubmitted] = useState<string>('');
-const [activeFilters, setActiveFilters] = useState<ActiveFilters>({
-  Genre: null,
-  Year: null,
-  Season: null,
-  Format: null,
-  Status: null,
-});
-const [searchResults, setSearchResults] = useState<Anime[] | null>(null);
-const [trending, setTrending] = useState<Anime[] | null>(null);
-const [seasonal, setSeasonal] = useState<Anime[] | null>(null);
-
-createRoot(document.getElementById('root')!).render(  
-  
+createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
+    <Root />
+  </StrictMode>
+);
+
+
+export default function Root(){
+  const BASE_URL = 'https://api.jikan.moe/v4';
+  const limit = 12;  
+
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [query, setQuery] = useState<string>('');
+  const [submitted, setSubmitted] = useState<string>('');
+  const [activeFilters, setActiveFilters] = useState<ActiveFilters>({
+    Genre: null,
+    Year: null,
+    Season: null,
+    Format: null,
+    Status: null,
+  });
+  const [searchResults, setSearchResults] = useState<Anime[] | null>(null);
+  const [trending, setTrending] = useState<Anime[] | null>(null);
+  // const [seasonal, setSeasonal] = useState<Anime[] | null>(null);
+
+  function normalizeAnimeData(anime: any): Anime {
+  return {
+    mal_id: anime.mal_id,
+    title: anime.title,
+    titleJp: anime.title_japanese,
+    image: anime.images.jpg.image_url,
+    score: anime.score ?? null,
+    episodes: anime.episodes ?? null,
+    type: anime.type,
+    year: anime.year ?? null,
+    season: anime.season ?? null,
+    status: anime.status,
+    genres: anime.genres.map((g: any) => g.name),
+    studios: anime.studios.map((s: any) => s.name),
+  };
+}
+
+  useEffect(() => {
+    // Fetch trending 
+    const fetchTrending = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(`${BASE_URL}/top/anime?limit=${limit}`);
+        const data = await response.json();
+        const normalizedAnimeData = data.data.map((anime: any) => {
+          return normalizeAnimeData(anime);
+        });
+        setTrending(normalizedAnimeData);
+      } catch(err) {
+        setError(err instanceof Error ? err.message: "Unknown Error");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchTrending();
+  }, []);
+
+
+  return (
     <App
-      trending={mockAiring}
+      trending={trending ? trending : mockAiring}
       seasonal={mockSeasonal}
-      searchResults={null}
-      loading={false}
-      error={null}
-      query=""
-      submitted=""
-      activeFilters={{ Genre: null, Year: null, Season: null, Format: null, Status: null }}
-      onQueryChange={() => {
-        /* TODO */
-        // What it does: At a high-level, this function is responsible for 
-        // returning the result the user wants to query. e.g, if they want 
-        // to look up One Piece, the onQueryChange will look up anime most relevant 
-        // to One Piece. 
-        
+      searchResults={searchResults}
+      loading={loading}
+      error={error}
+      query={query}
+      submitted={submitted}
+      activeFilters={activeFilters}
+      onQueryChange={(value: string) => {
+        setQuery(value);
       }}
-      //
       onSubmit={() => {
         /* TODO */
-
       }}
       onClearSearch={() => {
-        /* TODO */
+        setQuery('');
+        setSubmitted('');
+        setSearchResults(null);
       }}
       onRetry={() => {
         /* TODO */
@@ -79,5 +121,5 @@ createRoot(document.getElementById('root')!).render(
         /* TODO */
       }}
     />
-  </StrictMode>,
-);
+  );
+}
