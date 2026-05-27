@@ -79,10 +79,10 @@ export default function Root() {
         const response = await fetch(`${BASE_URL}/top/anime?limit=${limit}`);
         const data = await response.json();
         const normalizedAnimeData = data.data.map((anime: JikanAnimeRaw) => {
-          normalizeAnimeData(anime);
+          return normalizeAnimeData(anime);
         });
         setTrending(normalizedAnimeData);
-      } catch(err) {
+      } catch (err) {
         err instanceof Error ? setError(err.message) : setError('An unknown error occurred');
       } finally {
         setLoading(false);

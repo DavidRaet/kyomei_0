@@ -43,7 +43,7 @@ export default function App({
   onRetry,
   onFilterToggle,
 }: AppProps) {
-  
+
   const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     onSubmit();
@@ -80,7 +80,7 @@ export default function App({
           </div>
         </header>
 
-        {/* Hero / Search */} 
+        {/* Hero / Search */}
         <section className="hero">
           <PosterOrbit posters={trending ?? []} />
           <div className="hero-left">
