@@ -3,7 +3,8 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { mockAiring, mockSeasonal } from './mocks';
-
+import { useState, useEffect } from 'react';
+import type { ActiveFilters, Anime  } from './types';
 // TODO: wire to Jikan v4 (https://docs.api.jikan.moe/). Replace the mock props
 // below with real state + fetches. Sketch:
 //   - useState for: query, submitted, trending, seasonal, searchResults,
@@ -28,6 +29,20 @@ import { mockAiring, mockSeasonal } from './mocks';
 // the types:
 // error
 
+const [error, setError] = useState<Error | null>(null);
+const [loading, setLoading] = useState<boolean>(false);
+const [query, setQuery] = useState<string>('');
+const [submitted, setSubmitted] = useState<string>('');
+const [activeFilters, setActiveFilters] = useState<ActiveFilters>({
+  Genre: null,
+  Year: null,
+  Season: null,
+  Format: null,
+  Status: null,
+});
+const [searchResults, setSearchResults] = useState<Anime[] | null>(null);
+const [trending, setTrending] = useState<Anime[] | null>(null);
+const [seasonal, setSeasonal] = useState<Anime[] | null>(null);
 
 createRoot(document.getElementById('root')!).render(  
   
