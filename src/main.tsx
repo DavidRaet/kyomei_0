@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import { mockAiring, mockSeasonal } from './mocks';
 import { useState, useEffect } from 'react';
-import type { ActiveFilters, Anime  } from './types';
+import type { ActiveFilters, Anime, JikanAnimeRaw } from './types';
 // TODO: wire to Jikan v4 (https://docs.api.jikan.moe/). Replace the mock props
 // below with real state + fetches. Sketch:
 //   - useState for: query, submitted, trending, seasonal, searchResults,
@@ -36,9 +36,9 @@ createRoot(document.getElementById('root') as HTMLElement).render(
 );
 
 
-export default function Root(){
+export default function Root() {
   const BASE_URL = 'https://api.jikan.moe/v4';
-  const limit = 12;  
+  const limit = 12;
 
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -55,36 +55,35 @@ export default function Root(){
   const [trending, setTrending] = useState<Anime[] | null>(null);
   // const [seasonal, setSeasonal] = useState<Anime[] | null>(null);
 
-  function normalizeAnimeData(anime: any): Anime {
-  return {
-    mal_id: anime.mal_id,
-    title: anime.title,
-    titleJp: anime.title_japanese,
-    image: anime.images.jpg.image_url,
-    score: anime.score ?? null,
-    episodes: anime.episodes ?? null,
-    type: anime.type,
-    year: anime.year ?? null,
-    season: anime.season ?? null,
-    status: anime.status,
-    genres: anime.genres.map((g: any) => g.name),
-    studios: anime.studios.map((s: any) => s.name),
-  };
-}
+  function normalizeAnimeData(anime: JikanAnimeRaw): Anime {
+    return {
+      mal_id: anime.mal_id,
+      titleEnglish: anime.title,
+      titleJp: anime.title_japanese,
+      image: anime.images.jpg.image_url,
+      score: anime.score ?? null,
+      episodes: anime.episodes ?? null,
+      type: anime.type,
+      year: anime.year ?? null,
+      season: anime.season ?? null,
+      status: anime.status,
+      genres: anime.genres.map((g: JikanAnimeRaw['genres'][0]) => g.name),
+      studios: anime.studios.map((s: JikanAnimeRaw['studios'][0]) => s.name),
+    };
+  }
 
   useEffect(() => {
-    // Fetch trending 
     const fetchTrending = async () => {
       setLoading(true);
       try {
         const response = await fetch(`${BASE_URL}/top/anime?limit=${limit}`);
         const data = await response.json();
-        const normalizedAnimeData = data.data.map((anime: any) => {
-          return normalizeAnimeData(anime);
+        const normalizedAnimeData = data.data.map((anime: JikanAnimeRaw) => {
+          normalizeAnimeData(anime);
         });
         setTrending(normalizedAnimeData);
       } catch(err) {
-        setError(err instanceof Error ? err.message: "Unknown Error");
+        err instanceof Error ? setError(err.message) : setError('An unknown error occurred');
       } finally {
         setLoading(false);
       }

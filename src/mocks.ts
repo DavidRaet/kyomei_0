@@ -6,8 +6,8 @@ import type { Anime } from './types';
 
 export const mockAiring: Anime[] = [
   {
-    id: 52991,
-    title: 'Frieren: Beyond Journey’s End',
+    mal_id: 52991,
+    titleEnglish: 'Frieren: Beyond Journey’s End',
     titleJp: '葬送のフリーレン',
     image: 'https://cdn.myanimelist.net/images/anime/1015/138006l.jpg',
     score: 9.32,
@@ -20,8 +20,8 @@ export const mockAiring: Anime[] = [
     studios: ['Madhouse'],
   },
   {
-    id: 44511,
-    title: 'Chainsaw Man',
+    mal_id: 44511,
+    titleEnglish: 'Chainsaw Man',
     titleJp: 'チェンソーマン',
     image: 'https://cdn.myanimelist.net/images/anime/1806/126216l.jpg',
     score: 8.45,
@@ -34,8 +34,8 @@ export const mockAiring: Anime[] = [
     studios: ['MAPPA'],
   },
   {
-    id: 50265,
-    title: 'Spy x Family',
+    mal_id: 50265,
+    titleEnglish: 'Spy x Family',
     titleJp: 'SPY×FAMILY',
     image: 'https://cdn.myanimelist.net/images/anime/1441/122795l.jpg',
     score: 8.45,
@@ -48,8 +48,8 @@ export const mockAiring: Anime[] = [
     studios: ['Wit Studio', 'CloverWorks'],
   },
   {
-    id: 40748,
-    title: 'Jujutsu Kaisen',
+    mal_id: 40748,
+    titleEnglish: 'Jujutsu Kaisen',
     titleJp: '呪術廻戦',
     image: 'https://cdn.myanimelist.net/images/anime/1171/109222l.jpg',
     score: 8.55,
@@ -62,8 +62,8 @@ export const mockAiring: Anime[] = [
     studios: ['MAPPA'],
   },
   {
-    id: 38000,
-    title: 'Demon Slayer: Kimetsu no Yaiba',
+    mal_id: 38000,
+    titleEnglish: 'Demon Slayer: Kimetsu no Yaiba',
     titleJp: '鬼滅の刃',
     image: 'https://cdn.myanimelist.net/images/anime/1286/99889l.jpg',
     score: 8.45,
@@ -76,8 +76,8 @@ export const mockAiring: Anime[] = [
     studios: ['ufotable'],
   },
   {
-    id: 37521,
-    title: 'Vinland Saga',
+    mal_id: 37521,
+    titleEnglish: 'Vinland Saga',
     titleJp: 'ヴィンランド・サガ',
     image: 'https://cdn.myanimelist.net/images/anime/1500/103005l.jpg',
     score: 8.74,
@@ -90,8 +90,8 @@ export const mockAiring: Anime[] = [
     studios: ['Wit Studio'],
   },
   {
-    id: 42310,
-    title: 'Cyberpunk: Edgerunners',
+    mal_id: 42310,
+    titleEnglish: 'Cyberpunk: Edgerunners',
     titleJp: 'サイバーパンク エッジランナーズ',
     image: 'https://cdn.myanimelist.net/images/anime/1818/126435l.jpg',
     score: 8.55,
@@ -104,8 +104,8 @@ export const mockAiring: Anime[] = [
     studios: ['Trigger'],
   },
   {
-    id: 32182,
-    title: 'Mob Psycho 100',
+    mal_id: 32182,
+    titleEnglish: 'Mob Psycho 100',
     titleJp: 'モブサイコ100',
     image: 'https://cdn.myanimelist.net/images/anime/8/80356l.jpg',
     score: 8.5,
@@ -118,8 +118,8 @@ export const mockAiring: Anime[] = [
     studios: ['Bones'],
   },
   {
-    id: 16498,
-    title: 'Attack on Titan',
+    mal_id: 16498,
+    titleEnglish: 'Attack on Titan',
     titleJp: '進撃の巨人',
     image: 'https://cdn.myanimelist.net/images/anime/10/47347l.jpg',
     score: 8.55,
@@ -132,8 +132,8 @@ export const mockAiring: Anime[] = [
     studios: ['Wit Studio'],
   },
   {
-    id: 30276,
-    title: 'One Punch Man',
+    mal_id: 30276,
+    titleEnglish: 'One Punch Man',
     titleJp: 'ワンパンマン',
     image: 'https://cdn.myanimelist.net/images/anime/12/76049l.jpg',
     score: 8.5,
@@ -146,8 +146,8 @@ export const mockAiring: Anime[] = [
     studios: ['Madhouse'],
   },
   {
-    id: 9253,
-    title: 'Steins;Gate',
+    mal_id: 9253,
+    titleEnglish: 'Steins;Gate',
     titleJp: 'シュタインズ・ゲート',
     image: 'https://cdn.myanimelist.net/images/anime/5/73199l.jpg',
     score: 9.07,
@@ -160,8 +160,8 @@ export const mockAiring: Anime[] = [
     studios: ['White Fox'],
   },
   {
-    id: 5114,
-    title: 'Fullmetal Alchemist: Brotherhood',
+    mal_id: 5114,
+    titleEnglish: 'Fullmetal Alchemist: Brotherhood',
     titleJp: '鋼の錬金術師 FULLMETAL ALCHEMIST',
     image: 'https://cdn.myanimelist.net/images/anime/1208/94745l.jpg',
     score: 9.1,
@@ -177,8 +177,8 @@ export const mockAiring: Anime[] = [
 
 export const mockSeasonal: Anime[] = [
   {
-    id: 34599,
-    title: 'Made in Abyss',
+    mal_id: 34599,
+    titleEnglish: 'Made in Abyss',
     titleJp: 'メイドインアビス',
     image: 'https://cdn.myanimelist.net/images/anime/6/86733l.jpg',
     score: 8.71,
@@ -191,8 +191,8 @@ export const mockSeasonal: Anime[] = [
     studios: ['Kinema Citrus'],
   },
   {
-    id: 11061,
-    title: 'Hunter x Hunter (2011)',
+    mal_id: 11061,
+    titleEnglish: 'Hunter x Hunter (2011)',
     titleJp: 'ハンター×ハンター',
     image: 'https://cdn.myanimelist.net/images/anime/11/33657l.jpg',
     score: 9.04,
@@ -205,8 +205,8 @@ export const mockSeasonal: Anime[] = [
     studios: ['Madhouse'],
   },
   {
-    id: 31240,
-    title: 'Re:Zero − Starting Life in Another World',
+    mal_id: 31240,
+    titleEnglish: 'Re:Zero − Starting Life in Another World',
     titleJp: 'Re:ゼロから始める異世界生活',
     image: 'https://cdn.myanimelist.net/images/anime/11/79410l.jpg',
     score: 8.25,
@@ -219,8 +219,8 @@ export const mockSeasonal: Anime[] = [
     studios: ['White Fox'],
   },
   {
-    id: 1,
-    title: 'Cowboy Bebop',
+    mal_id: 1,
+    titleEnglish: 'Cowboy Bebop',
     titleJp: 'カウボーイビバップ',
     image: 'https://cdn.myanimelist.net/images/anime/4/19644l.jpg',
     score: 8.75,
@@ -233,8 +233,8 @@ export const mockSeasonal: Anime[] = [
     studios: ['Sunrise'],
   },
   {
-    id: 31964,
-    title: 'My Hero Academia',
+    mal_id: 31964,
+    titleEnglish: 'My Hero Academia',
     titleJp: '僕のヒーローアカデミア',
     image: 'https://cdn.myanimelist.net/images/anime/10/78745l.jpg',
     score: 7.85,
@@ -247,8 +247,8 @@ export const mockSeasonal: Anime[] = [
     studios: ['Bones'],
   },
   {
-    id: 21,
-    title: 'One Piece',
+    mal_id: 21,
+    titleEnglish: 'One Piece',
     titleJp: 'ワンピース',
     image: 'https://cdn.myanimelist.net/images/anime/6/73245l.jpg',
     score: 8.7,
@@ -261,8 +261,8 @@ export const mockSeasonal: Anime[] = [
     studios: ['Toei Animation'],
   },
   {
-    id: 21459,
-    title: 'Tokyo Ghoul',
+    mal_id: 21459,
+    titleEnglish: 'Tokyo Ghoul',
     titleJp: '東京喰種',
     image: 'https://cdn.myanimelist.net/images/anime/5/64449l.jpg',
     score: 7.78,
@@ -275,8 +275,8 @@ export const mockSeasonal: Anime[] = [
     studios: ['Pierrot'],
   },
   {
-    id: 28977,
-    title: 'Gintama°',
+    mal_id: 28977,
+    titleEnglish: 'Gintama°',
     titleJp: '銀魂°',
     image: 'https://cdn.myanimelist.net/images/anime/3/72078l.jpg',
     score: 9.06,
@@ -289,8 +289,8 @@ export const mockSeasonal: Anime[] = [
     studios: ['Bandai Namco Pictures'],
   },
   {
-    id: 19,
-    title: 'Monster',
+    mal_id: 19,
+    titleEnglish: 'Monster',
     titleJp: 'モンスター',
     image: 'https://cdn.myanimelist.net/images/anime/10/18793l.jpg',
     score: 8.88,
@@ -303,8 +303,8 @@ export const mockSeasonal: Anime[] = [
     studios: ['Madhouse'],
   },
   {
-    id: 35180,
-    title: '3-gatsu no Lion 2nd Season',
+    mal_id: 35180,
+    titleEnglish: '3-gatsu no Lion 2nd Season',
     titleJp: '3月のライオン 第2シリーズ',
     image: 'https://cdn.myanimelist.net/images/anime/3/88469l.jpg',
     score: 9.0,
@@ -317,8 +317,8 @@ export const mockSeasonal: Anime[] = [
     studios: ['Shaft'],
   },
   {
-    id: 23273,
-    title: 'Your Lie in April',
+    mal_id: 23273,
+    titleEnglish: 'Your Lie in April',
     titleJp: '四月は君の嘘',
     image: 'https://cdn.myanimelist.net/images/anime/3/67177l.jpg',
     score: 8.59,
@@ -331,8 +331,8 @@ export const mockSeasonal: Anime[] = [
     studios: ['A-1 Pictures'],
   },
   {
-    id: 11757,
-    title: 'Sword Art Online',
+    mal_id: 11757,
+    titleEnglish: 'Sword Art Online',
     titleJp: 'ソードアート・オンライン',
     image: 'https://cdn.myanimelist.net/images/anime/11/39717l.jpg',
     score: 7.2,

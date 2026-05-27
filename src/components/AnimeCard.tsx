@@ -49,7 +49,7 @@ export function AnimeCard({ anime, variant, index }: AnimeCardProps) {
         {variant === 'minimal' ? (
           <div className="v-minimal">
             <div className="poster">
-              {anime.image && <img src={anime.image} alt={anime.title} loading="lazy" />}
+              {anime.image && <img src={anime.image} alt={anime.titleEnglish} loading="lazy" />}
               {anime.score ? (
                 <div className="score">
                   <IconStar /> {anime.score.toFixed(1)}
@@ -57,14 +57,14 @@ export function AnimeCard({ anime, variant, index }: AnimeCardProps) {
               ) : null}
               <div className="type-pill">{anime.type || 'TV'}</div>
               <div className="overlay">
-                <h3 className="title">{anime.title}</h3>
+                <h3 className="title">{anime.titleEnglish}</h3>
               </div>
             </div>
           </div>
         ) : variant === 'editorial' ? (
           <div className="v-editorial">
             <div className="poster">
-              {anime.image && <img src={anime.image} alt={anime.title} loading="lazy" />}
+              {anime.image && <img src={anime.image} alt={anime.titleEnglish} loading="lazy" />}
               {anime.score ? (
                 <div className="score">
                   <IconStar /> {anime.score.toFixed(1)}
@@ -77,7 +77,7 @@ export function AnimeCard({ anime, variant, index }: AnimeCardProps) {
                 <span className="dot" />
                 {anime.genres?.[0] || anime.type || 'Anime'}
               </div>
-              <h3 className="title">{anime.title}</h3>
+              <h3 className="title">{anime.titleEnglish}</h3>
               <div className="sub">
                 <span>{anime.episodes ? `${anime.episodes} ep` : '—'}</span>
                 <span className="sep" />
@@ -88,7 +88,7 @@ export function AnimeCard({ anime, variant, index }: AnimeCardProps) {
         ) : (
           <div className="v-poster">
             <div className="poster">
-              {anime.image && <img src={anime.image} alt={anime.title} loading="lazy" />}
+              {anime.image && <img src={anime.image} alt={anime.titleEnglish} loading="lazy" />}
               {anime.score ? (
                 <div className="score">
                   <IconStar /> {anime.score.toFixed(1)}
@@ -97,7 +97,7 @@ export function AnimeCard({ anime, variant, index }: AnimeCardProps) {
               <div className="type-pill">{anime.type || 'TV'}</div>
             </div>
             <div className="meta">
-              <h3 className="title">{anime.title}</h3>
+              <h3 className="title">{anime.titleEnglish}</h3>
               {sub}
             </div>
           </div>
