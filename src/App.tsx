@@ -1,4 +1,4 @@
-import type { FormEvent } from 'react';
+import type { SubmitEvent } from 'react';
 import type { ActiveFilters, Anime, CardVariant, FilterKey } from './types';
 import { AnimeCard } from './components/AnimeCard';
 import { EmptyState } from './components/EmptyState';
@@ -44,7 +44,7 @@ export default function App({
   onFilterToggle,
 }: AppProps) {
   
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: SubmitEvent) => {
     e.preventDefault();
     onSubmit();
   };
