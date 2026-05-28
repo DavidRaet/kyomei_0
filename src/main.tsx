@@ -53,7 +53,7 @@ export default function Root() {
   });
   const [searchResults, setSearchResults] = useState<Anime[] | null>(null);
   const [trending, setTrending] = useState<Anime[] | null>(null);
-  // const [seasonal, setSeasonal] = useState<Anime[] | null>(null);
+  const [seasonal, setSeasonal] = useState<Anime[] | null>(null);
 
   function normalizeAnimeData(anime: JikanAnimeRaw): Anime {
     return {
@@ -83,7 +83,11 @@ export default function Root() {
         });
         setTrending(normalizedAnimeData);
       } catch (err) {
-        err instanceof Error ? setError(err.message) : setError('An unknown error occurred');
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('An unknown error occurred');
+        }
       } finally {
         setLoading(false);
       }
@@ -91,11 +95,33 @@ export default function Root() {
     fetchTrending();
   }, []);
 
+    useEffect(() => {
+    const fetchSeasonal = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(`${BASE_URL}/seasons/now?limit=${limit}`);
+        const data = await response.json();
+        const normalizedAnimeData = data.data.map((anime: JikanAnimeRaw) => {
+          return normalizeAnimeData(anime);
+        });
+        setSeasonal(normalizedAnimeData);
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('An unknown error occurred');
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchSeasonal();
+  }, []);
 
   return (
     <App
       trending={trending ? trending : mockAiring}
-      seasonal={mockSeasonal}
+      seasonal={seasonal ? seasonal : mockSeasonal}
       searchResults={searchResults}
       loading={loading}
       error={error}
