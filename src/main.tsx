@@ -95,13 +95,14 @@ export default function Root() {
     fetchTrending();
   }, []);
 
-    useEffect(() => {
+  useEffect(() => {
     const fetchSeasonal = async () => {
       setLoading(true);
+      setError(null);
       try {
         const response = await fetch(`${BASE_URL}/seasons/now?limit=${limit}`);
         const data = await response.json();
-        const normalizedAnimeData = data.data.map((anime: JikanAnimeRaw) => {
+        const normalizedAnimeData: Anime[] = data.data.map((anime: JikanAnimeRaw) => {
           return normalizeAnimeData(anime);
         });
         setSeasonal(normalizedAnimeData);
@@ -133,7 +134,40 @@ export default function Root() {
       }}
       onSubmit={() => {
         /* TODO */
-      }}
+        setLoading(true);
+        setError(null);
+        setSubmitted(query);
+        const fetchSearchResults = async () => {
+          try {
+            const response = await fetch(`${BASE_URL}/anime?q=${query}&limit=24&order_by=score&sort=desc`);
+            const data = await response.json();
+            const normalizedAnimeData: Anime[] = data.data.map((anime: JikanAnimeRaw) => {
+              return normalizeAnimeData(anime);
+            });
+            const sortedAnimeData: Anime[] = normalizedAnimeData.sort((a, b) => {
+              const aTitle = a.titleEnglish.toLowerCase();
+              const bTitle = b.titleEnglish.toLowerCase();
+              const queryLower = query.toLowerCase();
+              const aMatch = aTitle.includes(queryLower);
+              const bMatch = bTitle.includes(queryLower);
+              if (aMatch && !bMatch) return -1;
+              if (!aMatch && bMatch) return 1;
+              return 0;
+            });
+            setSearchResults(sortedAnimeData);
+          } catch (err) {
+            if (err instanceof Error) {
+              setError(err.message);
+            } else {
+              setError('An unknown error occurred');
+            }
+          } finally {
+            setLoading(false);
+          }
+        }
+        fetchSearchResults();
+      }
+      }
       onClearSearch={() => {
         setQuery('');
         setSubmitted('');
