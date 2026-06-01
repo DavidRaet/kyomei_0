@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import type { Anime } from '../types';
+import type { Anime } from '../types/types';
 
 interface PosterOrbitProps {
   posters: Anime[];

@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import type { MouseEvent } from 'react';
-import type { Anime, CardVariant } from '../types';
+import type { Anime, CardVariant } from '../types/types';
 import { IconStar } from './icons';
 
 interface AnimeCardProps {
@@ -33,7 +33,7 @@ export function AnimeCard({ anime, variant, index }: AnimeCardProps) {
     <div className="sub">
       {anime.episodes ? <span>{anime.episodes} ep</span> : <span>—</span>}
       <span className="sep" />
-      <span>{anime.type || 'TV'}</span>
+      <span>{anime.format || 'TV'}</span>
       {anime.year && (
         <>
           <span className="sep" />
@@ -55,7 +55,7 @@ export function AnimeCard({ anime, variant, index }: AnimeCardProps) {
                   <IconStar /> {anime.score.toFixed(1)}
                 </div>
               ) : null}
-              <div className="type-pill">{anime.type || 'TV'}</div>
+              <div className="type-pill">{anime.format || 'TV'}</div>
               <div className="overlay">
                 <h3 className="title">{anime.titleEnglish}</h3>
               </div>
@@ -75,7 +75,7 @@ export function AnimeCard({ anime, variant, index }: AnimeCardProps) {
               <span className="idx">№ {String(index + 1).padStart(2, '0')}</span>
               <div className="eyebrow">
                 <span className="dot" />
-                {anime.genres?.[0] || anime.type || 'Anime'}
+                {anime.genres?.[0] || anime.format || 'Anime'}
               </div>
               <h3 className="title">{anime.titleEnglish}</h3>
               <div className="sub">
@@ -94,7 +94,7 @@ export function AnimeCard({ anime, variant, index }: AnimeCardProps) {
                   <IconStar /> {anime.score.toFixed(1)}
                 </div>
               ) : null}
-              <div className="type-pill">{anime.type || 'TV'}</div>
+              <div className="type-pill">{anime.format || 'TV'}</div>
             </div>
             <div className="meta">
               <h3 className="title">{anime.titleEnglish}</h3>
