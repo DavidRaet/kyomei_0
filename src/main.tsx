@@ -200,8 +200,19 @@ export default function Root() {
       onRetry={() => {
         /* TODO */
       }}
-      onFilterToggle={() => {
-        /* TODO */
+      onOpenFilter={(key: FilterKey | null) => {
+        setOpenFilter(key);
+      }}
+      onFilterToggle={(key: FilterKey, option: string) => {
+        if (!activeFilters[key]) {
+          setActiveFilters(prev => ({ ...prev, [key]: [option] }));
+        } else if ((activeFilters[key] as string[]).includes(option)) {
+          const removed = activeFilters[key]!.filter(opt => opt !== option);
+          setActiveFilters(prev => ({ ...prev, [key]: removed.length > 0 ? removed : null }));
+        } else {
+          const existingFilters = activeFilters[key];
+          setActiveFilters(prev => ({ ...prev, [key]: [...existingFilters, option] }));
+        }
       }}
     />
   );
