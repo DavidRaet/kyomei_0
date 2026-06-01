@@ -1,14 +1,30 @@
 import type { SubmitEvent } from 'react';
-import type { ActiveFilters, Anime, CardVariant, FilterKey } from './types';
+import type { ActiveFilters, Anime, CardVariant, FilterKey } from './types/types';
+import {
+  GENRE_OPTIONS,
+  YEAR_OPTIONS,
+  SEASON_OPTIONS,
+  FORMAT_OPTIONS,
+  STATUS_OPTIONS,
+} from './types/filter-options';
 import { AnimeCard } from './components/AnimeCard';
 import { EmptyState } from './components/EmptyState';
 import { ErrorState } from './components/ErrorState';
+import { FilterDropdown } from './components/FilterDropdown';
 import { IconSearch } from './components/icons';
 import { PosterOrbit } from './components/PosterOrbit';
 import { Section } from './components/Section';
 import { SkeletonGrid } from './components/SkeletonGrid';
 
 const FILTER_KEYS: FilterKey[] = ['Genre', 'Year', 'Season', 'Format', 'Status'];
+
+const FILTER_OPTIONS_BY_KEY: Record<FilterKey, readonly string[]> = {
+  Genre: GENRE_OPTIONS,
+  Year: YEAR_OPTIONS,
+  Season: SEASON_OPTIONS,
+  Format: FORMAT_OPTIONS,
+  Status: STATUS_OPTIONS,
+};
 
 interface AppProps {
   trending: Anime[] | null;
@@ -19,12 +35,14 @@ interface AppProps {
   query: string;
   submitted: string;
   activeFilters: ActiveFilters;
+  openFilter: FilterKey | null;
   cardVariant?: CardVariant;
   onQueryChange: (value: string) => void;
   onSubmit: () => void;
   onClearSearch: () => void;
   onRetry: () => void;
-  onFilterToggle: (key: FilterKey) => void;
+  onOpenFilter: (key: FilterKey | null) => void;
+  onFilterToggle: (key: FilterKey, option: string) => void;
 }
 
 export default function App({
@@ -36,11 +54,13 @@ export default function App({
   query,
   submitted,
   activeFilters,
+  openFilter,
   cardVariant = 'poster',
   onQueryChange,
   onSubmit,
   onClearSearch,
   onRetry,
+  onOpenFilter,
   onFilterToggle,
 }: AppProps) {
 
@@ -119,15 +139,15 @@ export default function App({
             <div className="filters">
               <span className="filter-label">Refine</span>
               {FILTER_KEYS.map((f) => (
-                <button
+                <FilterDropdown
                   key={f}
-                  type="button"
-                  className={`chip ${activeFilters[f] ? 'active' : ''}`}
-                  onClick={() => onFilterToggle(f)}
-                >
-                  {f}
-                  <span className="caret" />
-                </button>
+                  filterKey={f}
+                  options={FILTER_OPTIONS_BY_KEY[f]}
+                  selected={activeFilters[f]}
+                  isOpen={openFilter === f}
+                  onToggleOpen={() => onOpenFilter(openFilter === f ? null : f)}
+                  onSelectOption={(option) => onFilterToggle(f, option)}
+                />
               ))}
             </div>
           </div>
