@@ -1,40 +1,17 @@
-import { StrictMode } from 'react';
+import { StrictMode, useCallback, useState, useEffect, useMemo } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { mockAiring, mockSeasonal } from './mocks';
-import { useState, useEffect } from 'react';
-import type { ActiveFilters, Anime, JikanAnimeRaw } from './types';
-// TODO: wire to Jikan v4 (https://docs.api.jikan.moe/). Replace the mock props
-// below with real state + fetches. Sketch:
-//   - useState for: query, submitted, trending, seasonal, searchResults,
-//                   loading, error, activeFilters.
-//   - useEffect on mount:
-//       GET /top/anime?filter=airing&limit=12   -> setTrending
-//       GET /seasons/now?limit=12               -> setSeasonal
-//   - onSubmit: GET /anime?q=<query>&limit=24&order_by=score&sort=desc
-//   - Normalize raw Jikan responses into the `Anime` shape (see src/types.ts).
-//   - Dedupe by id; stagger calls (~400 ms) to respect Jikan's ~3 req/sec limit.
-//
-// To preview the Results section without wiring fetch, swap the props below:
-//   searchResults={mockSearchResults} submitted="frieren"
-// To preview loading / empty / error:
-//   loading={true} submitted="frieren"
-//   searchResults={[]} submitted="zzz"
-//   error="Network unreachable" submitted="x"
-// RESTAPI Link: https://api.jikan.moe/v4/
-
-// State needed
-// error, loading, success?, query, activeFilters, searchResults, trending, seasonal
-// the types:
-// error
+import type { ActiveFilters, Anime, FilterKey } from './types/types';
+import type { JikanAnimeRaw } from './types/jikan-raw-type';
+import type { Season, Format, Status } from './types/filter-options';
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
     <Root />
   </StrictMode>
 );
-
 
 export default function Root() {
   const BASE_URL = 'https://api.jikan.moe/v4';
@@ -51,6 +28,7 @@ export default function Root() {
     Format: null,
     Status: null,
   });
+  const [openFilter, setOpenFilter] = useState<FilterKey | null>(null);
   const [searchResults, setSearchResults] = useState<Anime[] | null>(null);
   const [trending, setTrending] = useState<Anime[] | null>(null);
   const [seasonal, setSeasonal] = useState<Anime[] | null>(null);
@@ -63,14 +41,59 @@ export default function Root() {
       image: anime.images.jpg.image_url,
       score: anime.score ?? null,
       episodes: anime.episodes ?? null,
-      type: anime.type,
       year: anime.year ?? null,
       season: anime.season ?? null,
+      format: anime.type,
       status: anime.status,
       genres: anime.genres.map((g: JikanAnimeRaw['genres'][0]) => g.name),
       studios: anime.studios.map((s: JikanAnimeRaw['studios'][0]) => s.name),
     };
   }
+
+  const yearsMatch = (yearOptions: string[], animeYear: number) => {
+    if (yearOptions) {
+      return yearOptions.some((yearOption) => {
+        if (yearOption === '2000s' && animeYear >= 2000 && animeYear <= 2009) {
+          return true;
+        } else if (yearOption === '2010s' && animeYear >= 2010 && animeYear <= 2019) {
+          return true;
+        } else if (yearOption === '2020s' && animeYear >= 2020 && animeYear <= 2029) {
+          return true;
+        }
+      })
+    } else {
+      return null;
+    }
+  }
+
+  const doesMatchFilter = useCallback((anime: Anime): boolean => {
+    const activeSeasonFilterLowerCase = activeFilters.Season?.map(s => s.toLowerCase() as Season) ?? null;
+
+    if (!activeFilters.Genre && !activeFilters.Year && !activeFilters.Season && !activeFilters.Format && !activeFilters.Status) {
+      return true;
+    } 
+    if (activeFilters.Genre && !activeFilters.Genre.some(g => anime.genres.includes(g))) {
+      return false;
+    }
+    if (activeFilters.Year && anime.year && !yearsMatch(activeFilters.Year, anime.year)) {
+      return false;
+    }
+    if (activeSeasonFilterLowerCase && anime.season && !activeSeasonFilterLowerCase.includes(anime.season.toLowerCase() as Season)) {
+      return false;
+    }
+    if (activeFilters.Format && anime.format && !activeFilters.Format.includes(anime.format as Format)) {
+      return false;
+    }
+    if (activeFilters.Status && anime.status && !activeFilters.Status.includes(anime.status as Status)) {
+      return false;
+    }
+    return true;
+  }, [activeFilters]);
+
+  const filteredSearchResults = useMemo(() => {
+    if (!searchResults) return null;
+    return searchResults.filter(doesMatchFilter);
+  }, [searchResults, doesMatchFilter]);
 
   useEffect(() => {
     const fetchTrending = async () => {
@@ -123,12 +146,13 @@ export default function Root() {
     <App
       trending={trending ? trending : mockAiring}
       seasonal={seasonal ? seasonal : mockSeasonal}
-      searchResults={searchResults}
+      searchResults={filteredSearchResults}
       loading={loading}
       error={error}
       query={query}
       submitted={submitted}
       activeFilters={activeFilters}
+      openFilter={openFilter}
       onQueryChange={(value: string) => {
         setQuery(value);
       }}
