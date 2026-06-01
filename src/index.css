@@ -368,7 +368,90 @@ input { font: inherit; color: inherit; background: none; border: 0; outline: 0; 
   color: var(--violet-100);
   box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.35) inset;
 }
-.chip .caret { width: 8px; height: 8px; border-right: 1px solid currentColor; border-bottom: 1px solid currentColor; transform: rotate(45deg) translate(-2px, -2px); opacity: 0.7; }
+.chip .caret { width: 8px; height: 8px; border-right: 1px solid currentColor; border-bottom: 1px solid currentColor; transform: rotate(45deg) translate(-2px, -2px); opacity: 0.7; transition: transform 0.18s ease; }
+.chip .caret.open { transform: rotate(225deg) translate(-2px, -2px); }
+.chip[aria-expanded="true"] {
+  border-color: var(--violet-400);
+  background: rgba(124, 58, 237, 0.18);
+  color: var(--violet-100);
+  box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.35) inset;
+}
+
+/* Filter dropdown */
+.filter-root {
+  position: relative;
+  display: inline-flex;
+}
+.filter-root .chip {
+  max-width: 320px;
+}
+.filter-root .filter-label-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.filter-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 200px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px;
+  background: linear-gradient(180deg, rgba(28,14,53,0.96), rgba(13,8,24,0.96));
+  border: 1px solid var(--line-2);
+  border-radius: var(--radius);
+  box-shadow:
+    0 14px 36px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(168, 85, 247, 0.18) inset,
+    0 0 28px rgba(124, 58, 237, 0.18);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+.filter-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 3px;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: var(--ink-2);
+  text-align: left;
+  width: 100%;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.filter-option:hover {
+  background: rgba(124, 58, 237, 0.14);
+  color: var(--violet-100);
+}
+.filter-option.selected {
+  color: var(--violet-100);
+}
+.filter-option-check {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line-2);
+  border-radius: 3px;
+  color: var(--violet-100);
+  background: rgba(10, 6, 19, 0.4);
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+.filter-option-check.on {
+  background: var(--violet-500);
+  border-color: var(--violet-400);
+  box-shadow: 0 0 8px rgba(168, 85, 247, 0.5);
+}
+.filter-option-label {
+  flex: 1;
+  white-space: nowrap;
+}
 
 /* ============================================================
    Poster Orbit — rotating iconic posters
