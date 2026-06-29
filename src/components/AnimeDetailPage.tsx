@@ -1,9 +1,7 @@
-// TODO: import { useParams } from 'react-router-dom';
-// TODO: import { useState, useEffect } from 'react';
 import type { AnimeDetail, CharacterEntry } from '../types/anime-detail';
 import { ErrorState } from './ErrorState';
 import { IconStar } from './icons';
-import { useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -179,6 +177,7 @@ const MOCK_CHARS: CharacterEntry[] = [
 
 export function AnimeDetailPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   // TODO: add useState and useEffect to fetch anime details and characters from the API using the id param
 
   // Replace ↓ with state once hooks are wired
@@ -186,7 +185,7 @@ export function AnimeDetailPage() {
   const detail: AnimeDetail = MOCK_DETAIL; // TODO: replace with useState<AnimeDetail | null>
   const chars: CharacterEntry[] | null = MOCK_CHARS; // TODO: replace with useState<CharacterEntry[] | null>
 
-  if (fetchStatus === 'success') return <DetailSkeleton />;
+  if (fetchStatus === 'loading') return <DetailSkeleton />;
   if (fetchStatus === 'error') {
     return <ErrorState message="Could not load anime details." onRetry={() => { }} />;
   }
@@ -216,8 +215,7 @@ export function AnimeDetailPage() {
       {/* Top bar */}
       <header className="topbar d-topbar">
         <div className="brand">
-          <button className="d-back" aria-label="Back to browse">
-            {/* TODO: wrap in <Link to="/"> or call navigate(-1) via useNavigate() */}
+          <button className="d-back" onClick={() => navigate(-1)} aria-label="Back to browse">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <path d="M15 18l-6-6 6-6" />
             </svg>
@@ -226,8 +224,7 @@ export function AnimeDetailPage() {
           <div className="brand-jp">共鳴</div>
         </div>
         <nav className="nav">
-          {/* TODO: replace with <Link to="/">Browse</Link> */}
-          <a href="/">Browse</a>
+          <Link to="/">Browse</Link>
         </nav>
         <div className="top-meta">
           <span className="dot" />
