@@ -7,9 +7,10 @@ interface AnimeCardProps {
   anime: Anime;
   variant: CardVariant;
   index: number;
+  onNavigate?: (mal_id: number) => void;
 }
 
-export function AnimeCard({ anime, variant, index }: AnimeCardProps) {
+export function AnimeCard({ anime, variant, index, onNavigate }: AnimeCardProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   const onMove = (e: MouseEvent<HTMLDivElement>) => {
@@ -44,7 +45,7 @@ export function AnimeCard({ anime, variant, index }: AnimeCardProps) {
   );
 
   return (
-    <div className="card" ref={ref} onMouseMove={onMove} onMouseLeave={onLeave}>
+    <div className="card" ref={ref} onMouseMove={onMove} onMouseLeave={onLeave} onClick={() => onNavigate?.(anime.mal_id)}>
       <div className="card-inner">
         {variant === 'minimal' ? (
           <div className="v-minimal">
