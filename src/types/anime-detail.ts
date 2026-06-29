@@ -30,7 +30,7 @@ export interface CharacterEntry {
     name: string;
     images: {
       jpg: { image_url: string };
-      webp: { image_url: string };
+      webp?: { image_url: string };
     };
   };
   role: string;

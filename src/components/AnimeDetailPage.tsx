@@ -2,7 +2,7 @@ import type { AnimeDetail, CharacterEntry } from '../types/anime-detail';
 import { ErrorState } from './ErrorState';
 import { IconStar } from './icons';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // ── helpers ──────────────────────────────────────────────────────────────────
 
 function fmtDate(iso: string | null | undefined): string | null {
@@ -36,7 +36,7 @@ function CharCard({ entry }: { entry: CharacterEntry }) {
   const ch = entry.character;
   const va =
     entry.voice_actors.find((v) => v.language === 'Japanese') || entry.voice_actors[0];
-  const chImg = ch.images.webp.image_url || ch.images.jpg.image_url;
+  const chImg = ch.images?.webp?.image_url || ch.images?.jpg?.image_url;
   const vaImg = va?.person.images.jpg.image_url ?? '';
 
   return (
@@ -83,119 +83,66 @@ export function DetailSkeleton() {
 
 
 
-// ── placeholder data (remove once state is wired) ─────────────────────────────
-
-const MOCK_DETAIL: AnimeDetail = {
-  mal_id: 52991,
-  title: 'Sousou no Frieren',
-  title_english: "Frieren: Beyond Journey's End",
-  title_japanese: '葬送のフリーレン',
-  images: {
-    jpg: {
-      image_url: 'https://cdn.myanimelist.net/images/anime/1015/138006.jpg',
-      large_image_url: 'https://cdn.myanimelist.net/images/anime/1015/138006l.jpg',
-    },
-    webp: {
-      image_url: 'https://cdn.myanimelist.net/images/anime/1015/138006.webp',
-      large_image_url: 'https://cdn.myanimelist.net/images/anime/1015/138006l.webp',
-    },
-  },
-  score: 9.38,
-  episodes: 28,
-  synopsis:
-    "The adventure is over but life goes on for an elf mage just beginning to learn what living is all about. Elf mage Frieren and her courageous fellow adventurers have defeated the Demon King and brought peace to the land. But Frieren will long outlive the rest of her mortal companions. How does the longest-lived feel about time and what does the experience of a hundred thousand years really mean?",
-  genres: [
-    { mal_id: 2, name: 'Adventure' },
-    { mal_id: 8, name: 'Drama' },
-    { mal_id: 10, name: 'Fantasy' },
-  ],
-  trailer: null,
-  status: 'Finished Airing',
-  rating: 'PG-13',
-  type: 'TV',
-  duration: '23 min per ep',
-  aired: { from: '2023-09-29T00:00:00+00:00', to: '2024-03-22T00:00:00+00:00' },
-  season: 'fall',
-  year: 2023,
-  studios: [{ mal_id: 1003, name: 'Madhouse' }],
-};
-
-const MOCK_CHARS: CharacterEntry[] = [
-  {
-    character: {
-      mal_id: 117236,
-      name: 'Frieren',
-      images: { jpg: { image_url: '' }, webp: { image_url: '' } },
-    },
-    role: 'Main',
-    favorites: 50000,
-    voice_actors: [
-      { language: 'Japanese', person: { name: 'Ichinose, Kana', images: { jpg: { image_url: '' } } } },
-    ],
-  },
-  {
-    character: {
-      mal_id: 167323,
-      name: 'Stark',
-      images: { jpg: { image_url: '' }, webp: { image_url: '' } },
-    },
-    role: 'Main',
-    favorites: 20000,
-    voice_actors: [
-      { language: 'Japanese', person: { name: 'Kobayashi, Chiaki', images: { jpg: { image_url: '' } } } },
-    ],
-  },
-  {
-    character: {
-      mal_id: 121974,
-      name: 'Himmel',
-      images: { jpg: { image_url: '' }, webp: { image_url: '' } },
-    },
-    role: 'Supporting',
-    favorites: 15000,
-    voice_actors: [
-      { language: 'Japanese', person: { name: 'Okitsu, Kazuyuki', images: { jpg: { image_url: '' } } } },
-    ],
-  },
-  {
-    character: {
-      mal_id: 121975,
-      name: 'Heiter',
-      images: { jpg: { image_url: '' }, webp: { image_url: '' } },
-    },
-    role: 'Supporting',
-    favorites: 12000,
-    voice_actors: [
-      { language: 'Japanese', person: { name: 'Miyake, Kenta', images: { jpg: { image_url: '' } } } },
-    ],
-  },
-];
-
-
 
 // ── main component ────────────────────────────────────────────────────────────
 
 export function AnimeDetailPage() {
+  const BASE_URL = 'https://api.jikan.moe/v4';
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   // TODO: add useState and useEffect to fetch anime details and characters from the API using the id param
+  const [animeDetail, setAnimeDetail] = useState<AnimeDetail | null>(null);
+  const [characters, setCharacters] = useState<CharacterEntry[] | null>(null);
+  const [fetchStatus, setFetchStatus] = useState<'loading' | 'success' | 'error'>('success');
 
-  // Replace ↓ with state once hooks are wired
-  const fetchStatus: string = 'success'; // TODO: replace with useState<'loading' | 'error' | 'success'>
-  const detail: AnimeDetail = MOCK_DETAIL; // TODO: replace with useState<AnimeDetail | null>
-  const chars: CharacterEntry[] | null = MOCK_CHARS; // TODO: replace with useState<CharacterEntry[] | null>
+  useEffect(() => {
+    (async () => {
+      let isMounted = true;
+      setAnimeDetail(null);
+      setCharacters(null);
+      setFetchStatus('loading');
+      try {
+        const fetchAnimeDetails = await fetch(`${BASE_URL}/anime/${id}`);
+        const animeDetailsData = await fetchAnimeDetails.json();
+        if (isMounted) {
+          setAnimeDetail(animeDetailsData.data);
+          setFetchStatus('success');
+        }
+      } catch (error) {
+        if (isMounted) {
+          setFetchStatus('error');
+          return;
+        }
+      }
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      try {
+        const fetchCharacterDetails = await fetch(`https://api.jikan.moe/v4/anime/${id}/characters`);
+        const characterEntryData = await fetchCharacterDetails.json();
+        if (isMounted) {
+          setCharacters(characterEntryData.data);
+          setFetchStatus('success');
+        }
+      } catch (error) {
+        if (isMounted) {
+          setFetchStatus('error');
+          return;
+        }
+      }
+    })();
+  }, [id]);
 
   if (fetchStatus === 'loading') return <DetailSkeleton />;
-  if (fetchStatus === 'error') {
+  if (fetchStatus === 'error' || !animeDetail) {
     return <ErrorState message="Could not load anime details." onRetry={() => { }} />;
   }
 
-  const cover = detail.images.webp.large_image_url || detail.images.jpg.large_image_url;
-  const banner = bannerOf(detail);
-  const studio = detail.studios.map((s) => s.name).join(', ');
-  const title = detail.title_english || detail.title;
+  const cover = animeDetail.images?.webp?.large_image_url || animeDetail.images?.jpg?.large_image_url;
+  const banner = bannerOf(animeDetail);
+  const studio = animeDetail.studios.map((s) => s.name).join(', ');
+  const title = animeDetail.title_english || animeDetail.title;
 
-  const sortedChars = (chars ?? [])
+  const sortedChars = (characters ?? [])
     .slice()
     .sort((a, b) => {
       const roleWeight = (r: string) => (r === 'Main' ? 0 : 1);
@@ -204,10 +151,10 @@ export function AnimeDetailPage() {
       return (b.favorites || 0) - (a.favorites || 0);
     });
 
-  const seasonValue = detail.season
-    ? `${cap(detail.season) ?? detail.season} ${detail.year ?? ''}`.trim()
-    : detail.year != null
-      ? String(detail.year)
+  const seasonValue = animeDetail.season
+    ? `${cap(animeDetail.season) ?? animeDetail.season} ${animeDetail.year ?? ''}`.trim()
+    : animeDetail.year != null
+      ? String(animeDetail.year)
       : null;
 
   return (
@@ -250,22 +197,22 @@ export function AnimeDetailPage() {
       <div className="d-head">
         <div className="d-cover">
           {cover && <img src={cover} alt={title} />}
-          {detail.score ? (
+          {animeDetail.score ? (
             <div className="score d-score">
-              <IconStar /> {detail.score.toFixed(1)}
+              <IconStar /> {animeDetail.score.toFixed(1)}
             </div>
           ) : null}
         </div>
         <div className="d-head-text">
           <div className="d-eyebrow">
             <span className="dot" />
-            {detail.genres.slice(0, 3).map((g) => g.name).join(' · ') || 'Anime'}
+            {animeDetail.genres.slice(0, 3).map((g) => g.name).join(' · ') || 'Anime'}
           </div>
           <h1 className="d-title">{title}</h1>
-          {detail.title_japanese && (
-            <div className="d-title-jp">{detail.title_japanese}</div>
+          {animeDetail.title_japanese && (
+            <div className="d-title-jp">{animeDetail.title_japanese}</div>
           )}
-          {detail.synopsis && <p className="d-synopsis">{detail.synopsis}</p>}
+          {animeDetail.synopsis && <p className="d-synopsis">{animeDetail.synopsis}</p>}
         </div>
       </div>
 
@@ -277,12 +224,12 @@ export function AnimeDetailPage() {
             Information<span className="jp">情報</span>
           </div>
           <MetaItem label="Studio" value={studio} />
-          <MetaItem label="Format" value={detail.type} />
-          <MetaItem label="Episodes" value={detail.episodes} />
-          <MetaItem label="Episode Duration" value={detail.duration} />
-          <MetaItem label="Status" value={detail.status} />
-          <MetaItem label="Start Date" value={fmtDate(detail.aired?.from)} />
-          <MetaItem label="End Date" value={fmtDate(detail.aired?.to)} />
+          <MetaItem label="Format" value={animeDetail.type} />
+          <MetaItem label="Episodes" value={animeDetail.episodes} />
+          <MetaItem label="Episode Duration" value={animeDetail.duration} />
+          <MetaItem label="Status" value={animeDetail.status} />
+          <MetaItem label="Start Date" value={fmtDate(animeDetail.aired?.from)} />
+          <MetaItem label="End Date" value={fmtDate(animeDetail.aired?.to)} />
           <MetaItem label="Season" value={seasonValue} />
         </aside>
 
@@ -295,7 +242,7 @@ export function AnimeDetailPage() {
             </h2>
           </div>
 
-          {chars === null ? (
+          {characters === null ? (
             <div className="d-char-grid">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div className="d-char skeleton" key={i} style={{ height: 88 }} />
