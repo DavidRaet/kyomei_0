@@ -1,6 +1,6 @@
 import { StrictMode, useCallback, useState, useEffect, useMemo } from 'react';
 import { createRoot } from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, useNavigate } from 'react-router-dom';
 import { AnimeDetailPage } from './components/AnimeDetailPage';
 import './index.css';
 import App from './App';
@@ -10,13 +10,8 @@ import type { JikanAnimeRaw } from './types/jikan-raw-type';
 import type { Season, Format, Status } from './types/filter-options';
 
 const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Root/ >,
-    children: [
-      { path: '/anime/:id', element: <AnimeDetailPage /> }
-    ]
-  }
+  { path: '/',          element: <Root /> },
+  { path: '/anime/:id', element: <AnimeDetailPage /> },
 ]);
 
 createRoot(document.getElementById('root') as HTMLElement).render(
@@ -26,6 +21,7 @@ createRoot(document.getElementById('root') as HTMLElement).render(
 );
 
 export default function Root() {
+  const navigate = useNavigate();
   const BASE_URL = 'https://api.jikan.moe/v4';
   const limit = 12;
 
@@ -215,6 +211,7 @@ export default function Root() {
       onOpenFilter={(key: FilterKey | null) => {
         setOpenFilter(key);
       }}
+      onNavigate={(id: number) => navigate(`/anime/${id}`)}
       onFilterToggle={(key: FilterKey, option: string) => {
         if (!activeFilters[key]) {
           setActiveFilters(prev => ({ ...prev, [key]: [option] }));

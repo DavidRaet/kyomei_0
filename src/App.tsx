@@ -44,6 +44,7 @@ interface AppProps {
   onRetry: () => void;
   onOpenFilter: (key: FilterKey | null) => void;
   onFilterToggle: (key: FilterKey, option: string) => void;
+  onNavigate: (mal_id: number) => void;
 }
 
 export default function App({
@@ -63,6 +64,7 @@ export default function App({
   onRetry,
   onOpenFilter,
   onFilterToggle,
+  onNavigate,
 }: AppProps) {
 
   const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
@@ -179,7 +181,7 @@ export default function App({
             ) : searchResults ? (
               <div className="grid grid-6">
                 {searchResults.map((a, i) => (
-                  <AnimeCard key={a.mal_id} anime={a} variant={cardVariant} index={i} />
+                  <AnimeCard key={a.mal_id} anime={a} variant={cardVariant} index={i} onNavigate={onNavigate} />
                 ))}
               </div>
             ) : null}
@@ -205,7 +207,7 @@ export default function App({
               ) : (
                 <div className="grid grid-6">
                   {trending.slice(0, 12).map((a, i) => (
-                    <AnimeCard key={a.mal_id} anime={a} variant={cardVariant} index={i} />
+                    <AnimeCard key={a.mal_id} anime={a} variant={cardVariant} index={i} onNavigate={onNavigate} />
                   ))}
                 </div>
               )}
@@ -230,7 +232,7 @@ export default function App({
               ) : (
                 <div className="grid grid-6">
                   {seasonal.slice(0, 12).map((a, i) => (
-                    <AnimeCard key={a.mal_id} anime={a} variant={cardVariant} index={i} />
+                    <AnimeCard key={a.mal_id} anime={a} variant={cardVariant} index={i} onNavigate={onNavigate} />
                   ))}
                 </div>
               )}
