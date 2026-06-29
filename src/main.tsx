@@ -1,5 +1,7 @@
 import { StrictMode, useCallback, useState, useEffect, useMemo } from 'react';
 import { createRoot } from 'react-dom/client';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { AnimeDetailPage } from './components/AnimeDetailPage';
 import './index.css';
 import App from './App';
 import { mockAiring, mockSeasonal } from './mocks';
@@ -7,9 +9,19 @@ import type { ActiveFilters, Anime, FilterKey } from './types/types';
 import type { JikanAnimeRaw } from './types/jikan-raw-type';
 import type { Season, Format, Status } from './types/filter-options';
 
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Root/ >,
+    children: [
+      { path: '/anime/:id', element: <AnimeDetailPage /> }
+    ]
+  }
+]);
+
 createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
-    <Root />
+    <RouterProvider router={router} />
   </StrictMode>
 );
 
@@ -71,7 +83,7 @@ export default function Root() {
 
     if (!activeFilters.Genre && !activeFilters.Year && !activeFilters.Season && !activeFilters.Format && !activeFilters.Status) {
       return true;
-    } 
+    }
     if (activeFilters.Genre && !activeFilters.Genre.some(g => anime.genres.includes(g))) {
       return false;
     }

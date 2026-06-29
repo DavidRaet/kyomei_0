@@ -15,6 +15,7 @@ import { IconSearch } from './components/icons';
 import { PosterOrbit } from './components/PosterOrbit';
 import { Section } from './components/Section';
 import { SkeletonGrid } from './components/SkeletonGrid';
+import { Link } from 'react-router-dom';
 
 const FILTER_KEYS: FilterKey[] = ['Genre', 'Year', 'Season', 'Format', 'Status'];
 
@@ -90,9 +91,9 @@ export default function App({
             <div className="brand-sub">An Anime Index</div>
           </div>
           <nav className="nav">
-            <a href="#" className="active">
+            <Link className='active' to='/'>
               Browse
-            </a>
+            </Link>
           </nav>
           <div className="top-meta">
             <span className="dot" />
