@@ -2,6 +2,8 @@ import { Link } from 'react-router-dom';
 import type { WatchlistEntry } from '../types/watchlist';
 import { useWatchlist, removeFromWatchlist } from '../hooks/useWatchlist';
 import { IconSearch, IconCaret, IconX } from './icons';
+import { useState } from 'react';
+import type { ActiveFilters } from '../types';
 
 function progressText(e: WatchlistEntry): string {
   const tot = e.episodes ?? null;
@@ -86,24 +88,31 @@ function WlTable({ title, jp, items }: { title: string; jp: string; items: Watch
 }
 
 export function WatchlistPage() {
-  const list = useWatchlist();
+  const watchlist = useWatchlist();
 
   // TODO: lift these into real controlled state (useState) and apply them to `list`
   // to produce the filtered/sorted `view` below.
-  const query = '';
-  const format = 'all';
-  const genre = 'all';
-  const sort = 'score';
-  const onQueryChange = (value: string) => { void value; };
-  const onFormatChange = (value: string) => { void value; };
-  const onGenreChange = (value: string) => { void value; };
-  const onSortChange = (value: string) => { void value; };
 
-  const formats = Array.from(new Set(list.map((e) => e.format).filter(Boolean))).sort();
-  const genres = Array.from(new Set(list.flatMap((e) => e.genres))).sort();
+  const [query, setQuery] = useState<string>('');
+  const [format, setFormat] = useState<'all' | 'tv'>('all');
+  const [genre, setGenre] = useState<string>('all');
+  const [sort, setSort] = useState<'title' | 'score' | 'recent'>('score');
 
-  // TODO: replace with the filtered/sorted result once query/format/genre/sort are wired up
-  const view = list;
+  const onQueryChange = (value: string) => { setQuery(value); };
+  const onFormatChange = (value: string) => { setFormat(value as 'all' | 'tv'); };
+  const onGenreChange = (value: string) => { setGenre(value); };
+  const onSortChange = (value: string) => { setSort(value as 'title' | 'score' | 'recent'); };
+  
+  const formats = Array.from(new Set(watchlist.map((e) => e.format).filter(Boolean))).sort();
+  const genres = Array.from(new Set(watchlist.flatMap((e) => e.genres))).sort();
+  const filteredWatchList = watchlist.filter((e) => {
+    const matchesQuery = query ? e.titleEnglish.toLowerCase().includes(query.toLowerCase()) : true;
+    const matchesFormat = format === 'all' ? true : e.format === format;
+    const matchesGenre = genre === 'all' ? true : e.genres.includes(genre);
+    return matchesQuery && matchesFormat && matchesGenre;
+  })
+  
+  const view = filteredWatchList;
 
   return (
     <div className="wl">
@@ -118,8 +127,8 @@ export function WatchlistPage() {
           Watchlist <span className="jp">鑑賞記録</span>
         </h1>
         <p className="wl-sub">
-          {list.length
-            ? `${list.length} ${list.length === 1 ? 'title' : 'titles'} on your watchlist.`
+          {watchlist.length
+            ? `${watchlist.length} ${watchlist.length === 1 ? 'title' : 'titles'} on your watchlist.`
             : 'Nothing saved yet — start adding titles from any anime page.'}
         </p>
       </section>
@@ -184,7 +193,7 @@ export function WatchlistPage() {
 
         {/* main */}
         <main className="wl-main">
-          {list.length === 0 ? (
+          {watchlist.length === 0 ? (
             <div className="state">
               <div className="jp-big">空</div>
               <h3>Your watchlist is empty</h3>
