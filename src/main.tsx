@@ -78,7 +78,7 @@ export default function Root() {
 
   const doesMatchFilter = useCallback((anime: Anime): boolean => {
     const activeSeasonFilterLowerCase = activeFilters.Season?.map(s => s.toLowerCase() as Season) ?? null;
-
+    
     if (!activeFilters.Genre && !activeFilters.Year && !activeFilters.Season && !activeFilters.Format && !activeFilters.Status) {
       return true;
     }
