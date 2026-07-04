@@ -1,6 +1,7 @@
 import type { AnimeDetail, CharacterEntry } from '../types/anime-detail';
+import type { Anime } from '../types/types';
 import { ErrorState } from './ErrorState';
-import { IconStar } from './icons';
+import { WatchlistCover } from './WatchlistCover';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 // ── helpers ──────────────────────────────────────────────────────────────────
@@ -128,6 +129,7 @@ export function AnimeDetailPage() {
           setFetchStatus('error');
           return;
         }
+        return () => { isMounted = false }
       }
     })();
   }, [id]);
@@ -157,6 +159,21 @@ export function AnimeDetailPage() {
       ? String(animeDetail.year)
       : null;
 
+  const watchlistAnime: Anime = {
+    mal_id: animeDetail.mal_id,
+    titleEnglish: title,
+    titleJp: animeDetail.title_japanese ?? undefined,
+    image: cover,
+    score: animeDetail.score,
+    episodes: animeDetail.episodes,
+    year: animeDetail.year,
+    season: animeDetail.season,
+    status: animeDetail.status,
+    format: animeDetail.type ?? 'TV',
+    genres: animeDetail.genres.map((g) => g.name),
+    studios: animeDetail.studios.map((s) => s.name),
+  };
+
   return (
     <div className="detail">
       {/* Top bar */}
@@ -172,6 +189,7 @@ export function AnimeDetailPage() {
         </div>
         <nav className="nav">
           <Link to="/">Browse</Link>
+          <Link to="/watchlist">Watchlist</Link>
         </nav>
         <div className="top-meta">
           <span className="dot" />
@@ -195,14 +213,7 @@ export function AnimeDetailPage() {
 
       {/* Header: large cover + title block */}
       <div className="d-head">
-        <div className="d-cover">
-          {cover && <img src={cover} alt={title} />}
-          {animeDetail.score ? (
-            <div className="score d-score">
-              <IconStar /> {animeDetail.score.toFixed(1)}
-            </div>
-          ) : null}
-        </div>
+        <WatchlistCover anime={watchlistAnime} cover={cover ?? ''} score={animeDetail.score} />
         <div className="d-head-text">
           <div className="d-eyebrow">
             <span className="dot" />

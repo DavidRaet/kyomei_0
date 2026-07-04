@@ -2,6 +2,7 @@ import { StrictMode, useCallback, useState, useEffect, useMemo } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, useNavigate } from 'react-router-dom';
 import { AnimeDetailPage } from './components/AnimeDetailPage';
+import { WatchlistPage } from './components/WatchlistPage';
 import './index.css';
 import App from './App';
 import { mockAiring, mockSeasonal } from './mocks';
@@ -12,6 +13,7 @@ import type { Season, Format, Status } from './types/filter-options';
 const router = createBrowserRouter([
   { path: '/',          element: <Root /> },
   { path: '/anime/:id', element: <AnimeDetailPage /> },
+  { path: '/watchlist', element: <WatchlistPage /> }
 ]);
 
 createRoot(document.getElementById('root') as HTMLElement).render(
