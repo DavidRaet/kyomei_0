@@ -96,6 +96,9 @@ export default function App({
             <Link className='active' to='/'>
               Browse
             </Link>
+            <Link to='/watchlist'>
+              Watchlist
+            </Link>
           </nav>
           <div className="top-meta">
             <span className="dot" />
