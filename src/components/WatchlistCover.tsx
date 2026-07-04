@@ -1,5 +1,7 @@
 import type { Anime } from '../types/types';
+import type { WatchlistEntry } from '../types/watchlist';
 import { IconStar, IconPlus, IconCheck } from './icons';
+import { useWatchlist, addToWatchlist, removeFromWatchlist } from '../hooks/useWatchlist';
 
 interface WatchlistCoverProps {
   anime: Anime;
@@ -8,11 +10,14 @@ interface WatchlistCoverProps {
 }
 
 export function WatchlistCover({ anime, cover, score }: WatchlistCoverProps) {
-  // TODO: derive from useWatchlist().some(e => e.mal_id === anime.mal_id)
-  const inList = false;
+  const inList = useWatchlist().some(entry => entry.mal_id === anime.mal_id);
 
   const toggle = () => {
-    // TODO: if inList, call removeFromWatchlist(anime.mal_id); otherwise call addToWatchlist(anime)
+    if(inList) {
+      removeFromWatchlist(anime.mal_id);
+    } else {
+      addToWatchlist(anime);
+    }
   };
 
   return (
