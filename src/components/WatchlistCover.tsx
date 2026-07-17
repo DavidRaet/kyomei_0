@@ -1,5 +1,4 @@
 import type { Anime } from '../types/types';
-import type { WatchlistEntry } from '../types/watchlist';
 import { IconStar, IconPlus, IconCheck } from './icons';
 import { useWatchlist, addToWatchlist, removeFromWatchlist } from '../hooks/useWatchlist';
 

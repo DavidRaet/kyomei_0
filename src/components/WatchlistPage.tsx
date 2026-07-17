@@ -3,7 +3,6 @@ import type { WatchlistEntry } from '../types/watchlist';
 import { useWatchlist, removeFromWatchlist } from '../hooks/useWatchlist';
 import { IconSearch, IconCaret, IconX } from './icons';
 import { useState } from 'react';
-import type { ActiveFilters } from '../types';
 
 function progressText(e: WatchlistEntry): string {
   const tot = e.episodes ?? null;
