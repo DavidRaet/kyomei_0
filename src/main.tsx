@@ -9,6 +9,7 @@ import { mockAiring, mockSeasonal } from './mocks';
 import type { ActiveFilters, Anime, FilterKey } from './types/types';
 import type { JikanAnimeRaw } from './types/jikan-raw-type';
 import type { Season, Format, Status } from './types/filter-options';
+import { matchesDecadeYear } from './utils/yearMatch';
 
 const router = createBrowserRouter([
   { path: '/',          element: <Root /> },
@@ -60,21 +61,6 @@ export default function Root() {
     };
   }
 
-  const yearsMatch = (yearOptions: string[], animeYear: number) => {
-    if (yearOptions) {
-      return yearOptions.some((yearOption) => {
-        if (yearOption === '2000s' && animeYear >= 2000 && animeYear <= 2009) {
-          return true;
-        } else if (yearOption === '2010s' && animeYear >= 2010 && animeYear <= 2019) {
-          return true;
-        } else if (yearOption === '2020s' && animeYear >= 2020 && animeYear <= 2029) {
-          return true;
-        }
-      })
-    } else {
-      return null;
-    }
-  }
 
   const doesMatchFilter = useCallback((anime: Anime): boolean => {
     const activeSeasonFilterLowerCase = activeFilters.Season?.map(s => s.toLowerCase() as Season) ?? null;
@@ -85,7 +71,7 @@ export default function Root() {
     if (activeFilters.Genre && !activeFilters.Genre.some(g => anime.genres.includes(g))) {
       return false;
     }
-    if (activeFilters.Year && anime.year && !yearsMatch(activeFilters.Year, anime.year)) {
+    if (activeFilters.Year && anime.year && !matchesDecadeYear(activeFilters.Year, anime.year)) {
       return false;
     }
     if (activeSeasonFilterLowerCase && anime.season && !activeSeasonFilterLowerCase.includes(anime.season.toLowerCase() as Season)) {
