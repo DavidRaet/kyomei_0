@@ -109,7 +109,7 @@ export function AnimeDetailPage() {
           setAnimeDetail(animeDetailsData.data);
           setFetchStatus('success');
         }
-      } catch (error) {
+      } catch  {
         if (isMounted) {
           setFetchStatus('error');
           return;
@@ -124,7 +124,7 @@ export function AnimeDetailPage() {
           setCharacters(characterEntryData.data);
           setFetchStatus('success');
         }
-      } catch (error) {
+      } catch {
         if (isMounted) {
           setFetchStatus('error');
           return;
