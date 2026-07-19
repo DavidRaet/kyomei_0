@@ -41,9 +41,7 @@ interface AppProps {
   onQueryChange: (value: string) => void;
   onSubmit: () => void;
   onClearSearch: () => void;
-  onRetryTrending: () => void;
-  onRetrySeasonal: () => void;
-  onRetrySearch: () => void;
+  onRetry: () => void;
   onOpenFilter: (key: FilterKey | null) => void;
   onFilterToggle: (key: FilterKey, option: string) => void;
   onNavigate: (mal_id: number) => void;
@@ -63,9 +61,7 @@ export default function App({
   onQueryChange,
   onSubmit,
   onClearSearch,
-  onRetryTrending,
-  onRetrySeasonal,
-  onRetrySearch,
+  onRetry,
   onOpenFilter,
   onFilterToggle,
   onNavigate,
@@ -182,7 +178,7 @@ export default function App({
             {loading ? (
               <SkeletonGrid count={12} />
             ) : error ? (
-              <ErrorState message={error} onRetry={onRetrySearch} />
+              <ErrorState message={error} onRetry={onRetry} />
             ) : searchResults && searchResults.length === 0 ? (
               <EmptyState query={submitted} onReset={onClearSearch} />
             ) : searchResults ? (
@@ -210,7 +206,7 @@ export default function App({
               {trending === null ? (
                 <SkeletonGrid count={12} />
               ) : trending.length === 0 ? (
-                <ErrorState message="Couldn't reach the trending feed." onRetry={onRetryTrending} />
+                <ErrorState message="Couldn't reach the trending feed." onRetry={onRetry} />
               ) : (
                 <div className="grid grid-6">
                   {trending.slice(0, 12).map((a, i) => (
@@ -235,7 +231,7 @@ export default function App({
               {seasonal === null ? (
                 <SkeletonGrid count={12} />
               ) : seasonal.length === 0 ? (
-                <ErrorState message="Couldn't reach the seasonal feed." onRetry={onRetrySeasonal} />
+                <ErrorState message="Couldn't reach the seasonal feed." onRetry={onRetry} />
               ) : (
                 <div className="grid grid-6">
                   {seasonal.slice(0, 12).map((a, i) => (
