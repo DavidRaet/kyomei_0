@@ -7,39 +7,15 @@ import './index.css';
 import App from './App';
 import { mockAiring, mockSeasonal } from './mocks';
 import type { ActiveFilters, Anime, FilterKey } from './types/types';
-import type { JikanAnimeRaw } from './types/jikan-raw-type';
 import type { Season, Format, Status } from './types/filter-options';
 import { matchesDecadeYear } from './utils/yearMatch';
+import { getAnimeList } from './api/animeProvider';
 
 const router = createBrowserRouter([
   { path: '/',          element: <Root /> },
   { path: '/anime/:id', element: <AnimeDetailPage /> },
   { path: '/watchlist', element: <WatchlistPage /> }
 ]);
-
-const JIKAN_UNREACHABLE_MESSAGE =
-  "Jikan (MyAnimeList's API) is temporarily unreachable — please try again in a moment.";
-
-async function fetchWithRetry(url: string, retries = 1, delayMs = 1000): Promise<Response> {
-  const response = await fetch(url);
-  if (response.status === 504 && retries > 0) {
-    await new Promise((resolve) => setTimeout(resolve, delayMs));
-    return fetchWithRetry(url, retries - 1, delayMs);
-  }
-  return response;
-}
-
-async function parseJikanList<T>(response: Response): Promise<T[]> {
-  const data = await response.json().catch(() => null);
-  const body = data as { data?: unknown; message?: string; status?: number } | null;
-  if (!response.ok || !Array.isArray(body?.data)) {
-    if (response.status === 504 || body?.status === 504) {
-      throw new Error(JIKAN_UNREACHABLE_MESSAGE);
-    }
-    throw new Error(body?.message ?? `Jikan request failed (status ${response.status})`);
-  }
-  return body.data as T[];
-}
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
@@ -49,7 +25,6 @@ createRoot(document.getElementById('root') as HTMLElement).render(
 
 export default function Root() {
   const navigate = useNavigate();
-  const BASE_URL = 'https://api.jikan.moe/v4';
   const limit = 12;
 
   const [error, setError] = useState<string | null>(null);
@@ -67,24 +42,6 @@ export default function Root() {
   const [searchResults, setSearchResults] = useState<Anime[] | null>(null);
   const [trending, setTrending] = useState<Anime[] | null>(null);
   const [seasonal, setSeasonal] = useState<Anime[] | null>(null);
-
-  function normalizeAnimeData(anime: JikanAnimeRaw): Anime {
-    return {
-      mal_id: anime.mal_id,
-      titleEnglish: anime.title,
-      titleJp: anime.title_japanese,
-      image: anime.images.jpg.image_url,
-      score: anime.score ?? null,
-      episodes: anime.episodes ?? null,
-      year: anime.year ?? null,
-      season: anime.season ?? null,
-      format: anime.type,
-      status: anime.status,
-      genres: (anime.genres ?? []).map((g: JikanAnimeRaw['genres'][0]) => g.name),
-      studios: (anime.studios ?? []).map((s: JikanAnimeRaw['studios'][0]) => s.name),
-    };
-  }
-
 
   const doesMatchFilter = useCallback((anime: Anime): boolean => {
     const activeSeasonFilterLowerCase = activeFilters.Season?.map(s => s.toLowerCase() as Season) ?? null;
@@ -118,9 +75,7 @@ export default function Root() {
   const fetchTrending = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetchWithRetry(`${BASE_URL}/top/anime?limit=${limit}`);
-      const rawData = await parseJikanList<JikanAnimeRaw>(response);
-      setTrending(rawData.map(normalizeAnimeData));
+      setTrending(await getAnimeList({ mode: 'trending', limit }));
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -136,9 +91,7 @@ export default function Root() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetchWithRetry(`${BASE_URL}/seasons/now?limit=${limit}`);
-      const rawData = await parseJikanList<JikanAnimeRaw>(response);
-      setSeasonal(rawData.map(normalizeAnimeData));
+      setSeasonal(await getAnimeList({ mode: 'seasonal', limit }));
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -154,20 +107,7 @@ export default function Root() {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetchWithRetry(`${BASE_URL}/anime?q=${searchQuery}&limit=24&order_by=score&sort=desc`);
-      const rawData = await parseJikanList<JikanAnimeRaw>(response);
-      const normalizedAnimeData: Anime[] = rawData.map(normalizeAnimeData);
-      const sortedAnimeData: Anime[] = normalizedAnimeData.sort((a, b) => {
-        const aTitle = a.titleEnglish.toLowerCase();
-        const bTitle = b.titleEnglish.toLowerCase();
-        const queryLower = searchQuery.toLowerCase();
-        const aMatch = aTitle.includes(queryLower);
-        const bMatch = bTitle.includes(queryLower);
-        if (aMatch && !bMatch) return -1;
-        if (!aMatch && bMatch) return 1;
-        return 0;
-      });
-      setSearchResults(sortedAnimeData);
+      setSearchResults(await getAnimeList({ mode: 'search', query: searchQuery }));
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);

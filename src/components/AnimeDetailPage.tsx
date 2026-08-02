@@ -4,6 +4,7 @@ import { ErrorState } from './ErrorState';
 import { WatchlistCover } from './WatchlistCover';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { getAnimeById, getCharacters } from '../api/animeProvider';
 // ── helpers ──────────────────────────────────────────────────────────────────
 
 function fmtDate(iso: string | null | undefined): string | null {
@@ -88,50 +89,37 @@ export function DetailSkeleton() {
 // ── main component ────────────────────────────────────────────────────────────
 
 export function AnimeDetailPage() {
-  const BASE_URL = 'https://api.jikan.moe/v4';
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  // TODO: add useState and useEffect to fetch anime details and characters from the API using the id param
   const [animeDetail, setAnimeDetail] = useState<AnimeDetail | null>(null);
   const [characters, setCharacters] = useState<CharacterEntry[] | null>(null);
   const [fetchStatus, setFetchStatus] = useState<'loading' | 'success' | 'error'>('success');
 
   useEffect(() => {
+    let isMounted = true;
     (async () => {
-      let isMounted = true;
       setAnimeDetail(null);
       setCharacters(null);
       setFetchStatus('loading');
       try {
-        const fetchAnimeDetails = await fetch(`${BASE_URL}/anime/${id}`);
-        const animeDetailsData = await fetchAnimeDetails.json();
-        if (isMounted) {
-          setAnimeDetail(animeDetailsData.data);
-          setFetchStatus('success');
-        }
-      } catch  {
-        if (isMounted) {
-          setFetchStatus('error');
-          return;
-        }
+        const detail = await getAnimeById(Number(id));
+        if (!isMounted) return;
+        setAnimeDetail(detail);
+        setFetchStatus('success');
+      } catch {
+        if (isMounted) setFetchStatus('error');
+        return;
       }
-      await new Promise(resolve => setTimeout(resolve, 500));
 
       try {
-        const fetchCharacterDetails = await fetch(`https://api.jikan.moe/v4/anime/${id}/characters`);
-        const characterEntryData = await fetchCharacterDetails.json();
-        if (isMounted) {
-          setCharacters(characterEntryData.data);
-          setFetchStatus('success');
-        }
+        const chars = await getCharacters(Number(id));
+        if (isMounted) setCharacters(chars);
       } catch {
-        if (isMounted) {
-          setFetchStatus('error');
-          return;
-        }
-        return () => { isMounted = false }
+        // detail already loaded successfully — leave characters null rather than
+        // flipping the whole page to an error state
       }
     })();
+    return () => { isMounted = false; };
   }, [id]);
 
   if (fetchStatus === 'loading') return <DetailSkeleton />;
@@ -193,7 +181,7 @@ export function AnimeDetailPage() {
         </nav>
         <div className="top-meta">
           <span className="dot" />
-          <span>Live · Jikan</span>
+          <span>Live · AniList</span>
         </div>
       </header>
 
@@ -278,7 +266,7 @@ export function AnimeDetailPage() {
       <footer className="foot">
         <div>© MMXXVI · Kyomei</div>
         <div className="jp">共鳴 — 響き合う物語の索引</div>
-        <div>Powered by Jikan / MAL</div>
+        <div>Powered by AniList, fallback via MAL</div>
       </footer>
     </div>
   );
