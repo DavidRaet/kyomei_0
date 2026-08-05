@@ -22,7 +22,7 @@ function writeToLocalStorage<T>(key: string, entry: CacheEntry<T>): void {
   try {
     localStorage.setItem(LS_PREFIX + key, JSON.stringify(entry));
   } catch {
-    // localStorage full/unavailable (e.g. private browsing) — degrade to memory-only cache
+    // localStorage full/unavailable (e.g. private browsing) - degrade to memory-only cache
   }
 }
 

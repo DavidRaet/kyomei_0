@@ -1,8 +1,8 @@
-# Kyomei (共鳴 — "resonance")
+# Kyomei (共鳴 - "resonance")
 
 Kyomei is a personal anime discovery app: search and browse anime via the [Jikan API](https://jikan.moe/), filter results, view detail pages, and keep a localStorage-backed watchlist.
 
-> **Current scope:** this is a pure client-side SPA. There is no backend, no auth, and no database — everything runs in the browser and talks directly to Jikan. See [Roadmap](#roadmap--future-vision) below for what's planned vs. what exists today.
+> **Current scope:** this is a pure client-side SPA. There is no backend, no auth, and no database - everything runs in the browser and talks directly to Jikan. See [Roadmap](#roadmap--future-vision) below for what's planned vs. what exists today.
 
 ## Features
 
@@ -28,7 +28,7 @@ npm install
 npm run dev
 ```
 
-No API key or `.env` setup is needed — Jikan is a public, unauthenticated API.
+No API key or `.env` setup is needed - Jikan is a public, unauthenticated API.
 
 ## Available scripts
 
@@ -44,17 +44,17 @@ No API key or `.env` setup is needed — Jikan is a public, unauthenticated API.
 
 ## Project structure
 
-- [`src/main.tsx`](src/main.tsx) — router setup and `Root`, the container that owns state/data-fetching for the home route
-- [`src/App.tsx`](src/App.tsx) — presentational home-route layout, driven entirely by props from `Root`
-- [`src/components/`](src/components/) — route components (`AnimeDetailPage`, `WatchlistPage`) and shared UI
-- [`src/hooks/useWatchlist.ts`](src/hooks/useWatchlist.ts) — localStorage-backed watchlist store with cross-tab sync
-- [`src/types/`](src/types/) — normalized (`Anime`), detail (`AnimeDetail`), and watchlist data shapes
+- [`src/main.tsx`](src/main.tsx) - router setup and `Root`, the container that owns state/data-fetching for the home route
+- [`src/App.tsx`](src/App.tsx) - presentational home-route layout, driven entirely by props from `Root`
+- [`src/components/`](src/components/) - route components (`AnimeDetailPage`, `WatchlistPage`) and shared UI
+- [`src/hooks/useWatchlist.ts`](src/hooks/useWatchlist.ts) - localStorage-backed watchlist store with cross-tab sync
+- [`src/types/`](src/types/) - normalized (`Anime`), detail (`AnimeDetail`), and watchlist data shapes
 
 See [CLAUDE.md](CLAUDE.md) for the full architecture writeup, including data-shape details and known stubs.
 
 ## External API
 
-All data comes from [Jikan v4](https://docs.api.jikan.moe/) (an unofficial MyAnimeList REST API), fetched directly from the client with no auth and no backend proxy. It's rate-limited to roughly 3 requests/second — see `CLAUDE.md` for the specific endpoints in use.
+All data comes from [Jikan v4](https://docs.api.jikan.moe/) (an unofficial MyAnimeList REST API), fetched directly from the client with no auth and no backend proxy. It's rate-limited to roughly 3 requests/second - see `CLAUDE.md` for the specific endpoints in use.
 
 ## Roadmap / future vision
 
@@ -62,6 +62,6 @@ All data comes from [Jikan v4](https://docs.api.jikan.moe/) (an unofficial MyAni
 
 ## Known limitations
 
-- The retry button on error states (`onRetry`) is currently a no-op stub — it doesn't re-trigger the failed fetch
-- No persistence beyond the browser's `localStorage` (watchlist only — search/filter state resets on reload)
+- The retry button on error states (`onRetry`) is currently a no-op stub - it doesn't re-trigger the failed fetch
+- No persistence beyond the browser's `localStorage` (watchlist only - search/filter state resets on reload)
 - No backend proxy, so Jikan's rate limit is exposed directly to the client

@@ -32,7 +32,7 @@ export function AnimeCard({ anime, variant, index, onNavigate }: AnimeCardProps)
 
   const sub = (
     <div className="sub">
-      {anime.episodes ? <span>{anime.episodes} ep</span> : <span>—</span>}
+      {anime.episodes ? <span>{anime.episodes} ep</span> : <span>-</span>}
       <span className="sep" />
       <span>{anime.format || 'TV'}</span>
       {anime.year && (
@@ -80,9 +80,9 @@ export function AnimeCard({ anime, variant, index, onNavigate }: AnimeCardProps)
               </div>
               <h3 className="title">{anime.titleEnglish}</h3>
               <div className="sub">
-                <span>{anime.episodes ? `${anime.episodes} ep` : '—'}</span>
+                <span>{anime.episodes ? `${anime.episodes} ep` : '-'}</span>
                 <span className="sep" />
-                <span>{anime.year || anime.season || '—'}</span>
+                <span>{anime.year || anime.season || '-'}</span>
               </div>
             </div>
           </div>

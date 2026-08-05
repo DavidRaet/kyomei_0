@@ -116,14 +116,14 @@ export default function App({
           <div className="hero-left">
             <div className="hero-eyebrow">
               <span className="line" />
-              <span>Volume 01 · Spring 2026 — Issue 04</span>
+              <span>Volume 01 · Spring 2026 - Issue 04</span>
             </div>
             <h1 className="hero-title">
               Find the series that <em>resonates.</em>
               <span className="jp">響</span>
             </h1>
             <p className="hero-tagline">
-              Kyomei is a hand-tuned index of anime — curated for collectors and cinephiles.
+              Kyomei is a hand-tuned index of anime - curated for collectors and cinephiles.
               Search 28,000+ titles by name, romaji, or kanji. Filter by season, format, and mood.
             </p>
 
@@ -134,7 +134,7 @@ export default function App({
                 </span>
                 <input
                   type="text"
-                  placeholder="Search by title, romaji, or kanji — e.g. Frieren, 葬送のフリーレン"
+                  placeholder="Search by title, romaji, or kanji (e.g. Frieren, 葬送のフリーレン)"
                   value={query}
                   onChange={(e) => onQueryChange(e.target.value)}
                   autoFocus
@@ -249,7 +249,7 @@ export default function App({
 
         <footer className="foot">
           <div>© MMXXVI · Kyomei</div>
-          <div className="jp">共鳴 — 響き合う物語の索引</div>
+          <div className="jp">共鳴 - 響き合う物語の索引</div>
           <div>Powered by AniList, fallback via MAL</div>
         </footer>
       </main>

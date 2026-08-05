@@ -7,7 +7,7 @@ import { useState } from 'react';
 function progressText(e: WatchlistEntry): string {
   const tot = e.episodes ?? null;
   if (e.status === 'completed') return tot ? `${tot} / ${tot}` : 'Complete';
-  return tot ? `— / ${tot}` : '—';
+  return tot ? `- / ${tot}` : '-';
 }
 
 function WlTopBar() {
@@ -41,7 +41,7 @@ function WlRow({ e }: { e: WatchlistEntry }) {
         <div className="wl-thumb">{e.image && <img src={e.image} alt="" loading="lazy" />}</div>
         <span className="wl-title">{e.titleEnglish}</span>
       </div>
-      <div className="wl-c-score">{e.score ? e.score.toFixed(1) : '—'}</div>
+      <div className="wl-c-score">{e.score ? e.score.toFixed(1) : '-'}</div>
       <div className="wl-c-prog">{progressText(e)}</div>
       <div className="wl-c-type">{e.format || 'TV'}</div>
       <button
@@ -128,7 +128,7 @@ export function WatchlistPage() {
         <p className="wl-sub">
           {watchlist.length
             ? `${watchlist.length} ${watchlist.length === 1 ? 'title' : 'titles'} on your watchlist.`
-            : 'Nothing saved yet — start adding titles from any anime page.'}
+            : 'Nothing saved yet - start adding titles from any anime page.'}
         </p>
       </section>
 
@@ -215,7 +215,7 @@ export function WatchlistPage() {
 
       <footer className="foot">
         <div>© MMXXVI · Kyomei</div>
-        <div className="jp">共鳴 — 響き合う物語の索引</div>
+        <div className="jp">共鳴 - 響き合う物語の索引</div>
         <div>Saved locally</div>
       </footer>
     </div>

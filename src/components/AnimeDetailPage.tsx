@@ -29,7 +29,7 @@ function MetaItem({ label, value }: { label: string; value: string | number | nu
   return (
     <div className="d-meta-item">
       <div className="d-meta-label">{label}</div>
-      <div className="d-meta-value">{value || '—'}</div>
+      <div className="d-meta-value">{value || '-'}</div>
     </div>
   );
 }
@@ -265,7 +265,7 @@ export function AnimeDetailPage() {
 
       <footer className="foot">
         <div>© MMXXVI · Kyomei</div>
-        <div className="jp">共鳴 — 響き合う物語の索引</div>
+        <div className="jp">共鳴 - 響き合う物語の索引</div>
         <div>Powered by AniList, fallback via MAL</div>
       </footer>
     </div>

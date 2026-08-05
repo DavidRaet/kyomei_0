@@ -6,7 +6,7 @@ import type { AnimeListParams } from './types';
 const BASE_URL = 'https://api.jikan.moe/v4';
 
 export const JIKAN_UNREACHABLE_MESSAGE =
-  "Jikan (MyAnimeList's API) is temporarily unreachable — please try again in a moment.";
+  "Jikan (MyAnimeList's API) is temporarily unreachable - please try again in a moment.";
 
 async function fetchWithRetry(url: string, retries = 1, delayMs = 1000): Promise<Response> {
   const response = await fetch(url);
