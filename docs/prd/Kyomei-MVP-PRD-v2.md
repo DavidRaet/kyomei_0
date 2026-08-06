@@ -464,7 +464,7 @@ So that I can understand why they liked/disliked a show
 - **React (TypeScript)** — SPA served as compiled static files from the Go server
 - **Pages in scope:** Auth (Login/Signup), Onboarding/Vibe Check, Dashboard/Home Feed, Anime Detail, Search & Browse, Watchlist, User Profile
 
-### Backend (Should be changed to either FastAPI or Node.js)
+### Backend
 - **Go** — REST API server
 - **Auth0** — Authentication and session management; Go backend validates JWTs via Auth0's JWKS endpoint
 - **Raw SQL** — All database queries written directly in Go; no ORM
@@ -475,18 +475,21 @@ So that I can understand why they liked/disliked a show
 - 5 core tables: `users`, `user_preferences`, `anime`, `user_ratings`, `user_watchlist`
 - Indexes on `user_id`, `anime_id`
 
-### External Servicesx
+
+### External Services
 - **Resend** — Transactional email (password reset, welcome flow)
 - **Vercel Blob** — File/blob storage (poster images if self-hosted)
 - **Sentry** — Error monitoring and crash reporting (Go + React)
 - **Amplitude** — Product analytics and behavioral tracking
-- **JikanAPI** — Anime metadata for fetching anime catalog
+- **Anilist GraphQL** — Anime metadata for fetching anime catalog (JikanAPI as backup)
 
 ### Deployment
+- **Vercel** - Hosts React frontend 
 - **Railway** — Hosts both the Go backend and PostgreSQL database
 - Go server serves compiled React `dist/` as static files (single Railway service)
 - **GitHub Actions** — CI/CD pipeline (lint, test, build, deploy to Railway on merge to main)
-
+- **AWS EC2** - Future hosting for Go backend (Phase 2 - will use as a learning exercise)
+- **AWS S3** - Future hosting for object storage  (Phase 2 - will use as a learning exercise)
 ---
 
 ## Database Schema (5 Core Tables)
@@ -646,7 +649,6 @@ kyomei/
 | Auth0 JWT validation misconfiguration | High — security gap | Follow Auth0's Go SDK guide; test with expired/invalid tokens |
 | Schema design mistakes | High — hard to fix post-deploy | Validate schema manually in PostgreSQL sandbox before first migration |
 | Poor recommendation quality | High — kills engagement | Manually validate algorithm on 10+ test profiles before launch |
-| JikanAPI rate limiting during seed | Low — one-time script | Add delay between batch requests in seed script |
 | Recommendation cache staleness | Medium — stale recs | Invalidate cache on every new rating event |
 | Performance bottlenecks | Medium — affects retention | Indexes on user_id, anime_id; profile slow queries with EXPLAIN ANALYZE |
 
@@ -655,7 +657,6 @@ kyomei/
 ## Definition of Done (MVP)
 
 - [ ] All P0 features implemented and tested
-- [ ] Database schema validated with 300+ anime (via seed script)
 - [ ] Auth0 JWT validation working end-to-end on all protected routes
 - [ ] REST API fully functional (React → Go → PostgreSQL → React)
 - [ ] Recommendation algorithm manually validated (produces relevant results)
@@ -684,14 +685,12 @@ kyomei/
 
 ### Phase 3 (Months 5-6): Scale & Expand
 - Mobile app (React Native)
-- Third-party integrations (AniList, MAL import)
 - Advanced analytics dashboard
 - Creator tools (curated lists)
 - Push notifications
 
 ### Phase 4 (Months 7-12): Monetization & Growth
 - Premium features (advanced stats, curated playlists)
-- Partnerships with streaming platforms
 - Marketing and community growth
 - Discord bot, Reddit integration
 
@@ -715,5 +714,5 @@ kyomei/
 ---
 
 **Document Owner:** @David Raet
-**Version:** 2.0
-**Last Updated:** July 7th, 2026
+**Version:** 2.1
+**Last Updated:** August 6th, 2026
