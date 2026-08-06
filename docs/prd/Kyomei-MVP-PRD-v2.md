@@ -1,18 +1,18 @@
 # Kyomei MVP: Product Requirements Document
 
-**Version:** 2.0
+**Version:** 2.2
 **Status:** Planning Phase
-**Timeline:** MVP launch in 2 months (target: September 2026)
+**Timeline:** MVP launch in 1 month (target: September 2026)
 
 ---
 
 ## Executive Summary
 
-**Kyomei** (共鳴 — resonance) is a personalized anime recommendation engine built by fans for fans. Instead of endless scrolling through 10,000+ titles, Kyomei matches users with anime that *resonates with their vibe* — their personal frequency of taste.
+**Kyomei** (共鳴 - resonance) is a personalized anime recommendation engine built by fans for fans. Instead of endless scrolling through 10,000+ titles, Kyomei matches users with anime that *resonates with their vibe* - their personal frequency of taste.
 
 The MVP validates the core hypothesis: **A smart recommendation system based on user taste profiles surfaces better anime than random browsing.**
 
-**Target User:** Anime fans (beginner to veteran) aged 13–35 who want discovery without the guessing game.
+**Target User:** Anime fans who want discovery without the guessing game.
 
 **Success Metric:** User completes vibe check → receives relevant recommendations → rates shows → sees improved recommendations on next visit.
 
@@ -20,7 +20,7 @@ The MVP validates the core hypothesis: **A smart recommendation system based on 
 
 ## Problem Statement
 
-**Current State:** 
+**Current State:**
 - lack of personalized discovery in anime streaming platforms
 - Users spend an unnecessary amount of time scrolling before picking a show
 - Generic "Top 100" lists don't account for individual taste
@@ -80,7 +80,7 @@ Basic ratings         → Social recommendations    → Mobile app + integration
 
 | Feature | Description | Priority |
 |---|---|---|
-| 5-Question Form | Captures user taste profile | P0 |
+| 6-Question Form | Captures user taste profile via more abstract, indirect questions (reduced anchoring vs. direct genre/mood asks) | P0 |
 | Multi-Select Genres | Action, Romance, Comedy, Psychological, Slice-of-Life, Thriller, Drama, Horror, Fantasy, Sci-Fi | P0 |
 | Mood Preference | Single select: Uplifting, Intense/Dark, Relaxing, Thought-Provoking | P0 |
 | Episode Length | Short (<13), Medium (13–26), Long (26+) | P0 |
@@ -98,30 +98,33 @@ Basic ratings         → Social recommendations    → Mobile app + integration
 **Technical Notes:**
 - Client-side validation in React + server-side verification in Go handler
 - Map answers to recommendation algorithm (tag matching)
-- 5 questions is fixed for MVP; subject to A/B testing in Phase 2
+- Question count increased from 5 → 6; framing shifted toward more abstract/indirect phrasing to reduce direct-bias in answers. Exact wording and the added 6th category are still being designed — **TBD, to be detailed in a follow-up update**
+- Subject to A/B testing in Phase 2
 
 ---
 
-### 1.3 Anime Catalog (via JikanAPI) 
+### 1.3 Anime Catalog (via Anilist GraphQL)
 
 | Feature | Description | Priority |
 |---|---|---|
-| Anime Titles via JikanAPI | Backend connects to the JikanAPI to retrieve Anime information   | P0 |
+| Anime Titles via Anilist GraphQL | Backend connects to Anilist GraphQL API to retrieve Anime information | P0 |
 | Core Metadata | Title, description, genres, episode count, rating, year, poster URL | P0 |
-| Genre/Tag Tagging | Each anime tagged with 2–5 genres (JikanAPI provides genre tags) | P0 |
+| Genre/Tag Tagging | Each anime tagged with 2–5 genres (Anilist provides genre tags) | P0 |
 | Community Rating | Average user rating (5-star scale) | P1 |
 | Status Field | FINISHED, AIRING, UPCOMING | P1 |
 
-**Success Criteria:** 
-- successfully connected to the JikanAPI and retrieved anime data
+**Success Criteria:**
+- successfully connected to the Anilist GraphQL API and retrieved anime data
 - No missing genres or descriptions
 - All poster URLs are valid (no 404s)
 
 **Technical Notes:**
-- Script sends GraphQL POST requests to the AniList public API (`https://graphql.anilist.co`) — no API key required
+- Script sends GraphQL POST requests to the AniList public API (`https://graphql.anilist.co`) - no API key required
 - Fetches in batches: title, genres, synopsis, episode count, poster URL, average score, year, status
 - Transforms and inserts records directly into the `anime` PostgreSQL table
-- Seed strategy: top 100 by AniList rating first, then expand to 300 with genre diversity
+- **Seed strategy confirmed:** AniList does not offer a "fetch all" endpoint — every list query is wrapped in a `Page` object, capped at `perPage` 50, and the API enforces a rate limit (normally ~90 requests/min, currently degraded to 30/min). AniList's own catalog has 20,000+ anime entries, so pulling the full catalog would require hundreds of paginated requests and isn't practical for a 1-month MVP window.
+- Given those constraints, stick with the original seed plan: fetch **top 100 titles first** (sorted `POPULARITY_DESC`/`SCORE_DESC`, ~2 paginated requests at perPage 50), then **expand to 300** with genre diversity (a handful more paginated requests). This comfortably stays under rate limits and is enough volume to validate recommendation quality.
+- Full-catalog sync (beyond 300) is deferred to Phase 2/3 as a background/incremental job, not part of MVP.
 - Genres and tags stored in a normalized structure (separate table or JSONB column)
 
 ---
@@ -347,7 +350,7 @@ I want to sign up with my email
 So that I can create a personalized anime profile
 
 As a new user
-I want to complete a quick 5-question vibe check
+I want to complete a quick 6-question vibe check
 So that the system understands my anime taste
 
 As an authenticated user
@@ -410,9 +413,9 @@ So that I can understand why they liked/disliked a show
 | Requirement | Target | Notes |
 |---|---|---|
 | Performance | <1s page load, <200ms API response | Go's low latency supports this well |
-| Uptime | 99.5% (MVP on single Railway service) | Upgrade infrastructure in Phase 3 |
+| Uptime | 99.5% (Vercel-hosted frontend + Railway-hosted backend/DB) | Upgrade infrastructure in Phase 3 |
 | Database | PostgreSQL, 5 core tables, <10MB initial | Indexes on user_id, anime_id |
-| Security | HTTPS, Auth0 JWT validation, no sensitive data in logs | OWASP compliance |
+| Security | HTTPS, Auth0 JWT validation, CORS restricted to frontend origin, no sensitive data in logs | OWASP compliance |
 | Scalability | 100–1,000 concurrent users | Go goroutines handle concurrency efficiently at this scale |
 | Browser Support | Chrome, Firefox, Safari (last 2 versions) | Mobile-responsive (no native app yet) |
 | Accessibility | WCAG 2.1 AA (contrast, keyboard nav, alt text) | Test with accessibility tools |
@@ -453,19 +456,19 @@ So that I can understand why they liked/disliked a show
 - ❌ **Streaming rights** — Don't embed or verify where to watch
 - ❌ **User-generated content** — No reviews or comments in MVP
 - ❌ **Social features** — Following, messaging, etc.
-- ❌ **Anthropic Claude / LLM** — Noted as a planned integration post-MVP (candidates: recommendation explanations, conversational discovery)
+- ❌ **Anthropic Claude / LLM** — Noted as a planned integration post-MVP (candidates: recommendation explanations, conversational discovery); confirmed to stay in Phase 2, not pulled into MVP
 - ❌ **Social login** — Email-only for MVP; Google/Discord OAuth in Phase 2
 
 ---
 
 ## Technical Architecture (MVP)
 
-### Frontend                
-- **React (TypeScript)** — SPA served as compiled static files from the Go server
+### Frontend
+- **React (TypeScript)** — SPA deployed independently on **Vercel**; communicates with the Go backend exclusively via REST API calls (CORS-enabled)
 - **Pages in scope:** Auth (Login/Signup), Onboarding/Vibe Check, Dashboard/Home Feed, Anime Detail, Search & Browse, Watchlist, User Profile
 
 ### Backend
-- **Go** — REST API server
+- **Go** — REST API server, API-only (no longer serves the frontend build)
 - **Auth0** — Authentication and session management; Go backend validates JWTs via Auth0's JWKS endpoint
 - **Raw SQL** — All database queries written directly in Go; no ORM
 - **golang-migrate** — Database migration management via plain `.sql` migration files
@@ -475,7 +478,6 @@ So that I can understand why they liked/disliked a show
 - 5 core tables: `users`, `user_preferences`, `anime`, `user_ratings`, `user_watchlist`
 - Indexes on `user_id`, `anime_id`
 
-
 ### External Services
 - **Resend** — Transactional email (password reset, welcome flow)
 - **Vercel Blob** — File/blob storage (poster images if self-hosted)
@@ -484,12 +486,13 @@ So that I can understand why they liked/disliked a show
 - **Anilist GraphQL** — Anime metadata for fetching anime catalog (JikanAPI as backup)
 
 ### Deployment
-- **Vercel** - Hosts React frontend 
-- **Railway** — Hosts both the Go backend and PostgreSQL database
-- Go server serves compiled React `dist/` as static files (single Railway service)
-- **GitHub Actions** — CI/CD pipeline (lint, test, build, deploy to Railway on merge to main)
-- **AWS EC2** - Future hosting for Go backend (Phase 2 - will use as a learning exercise)
-- **AWS S3** - Future hosting for object storage  (Phase 2 - will use as a learning exercise)
+- **Vercel** — Hosts the React frontend as its own deployment (build + deploy independent of the backend)
+- **Railway** — Hosts the Go backend (REST API only) and the PostgreSQL database
+- **CORS** — Go backend configured to allow requests only from the Vercel-hosted frontend origin
+- **GitHub Actions** — CI/CD pipeline (lint, test, build, deploy to Railway on merge to main; frontend deploys via Vercel's own Git integration)
+- **AWS EC2** — Phase 2 learning exercise only: Go backend will be temporarily run on EC2 to gain hands-on infra experience, then terminated after a few weeks and reverted back to Railway
+- **AWS S3** — Phase 2 learning exercise only: used temporarily for object storage, then terminated in favor of Vercel Blob / Railway-native storage
+
 ---
 
 ## Database Schema (5 Core Tables)
@@ -616,9 +619,9 @@ CREATE INDEX idx_user_watchlist_user_id ON user_watchlist(user_id);
 kyomei/
 ├── cmd/
 │   ├── server/
-│       └── main.go           # Go REST server entry point
-│   
-│       
+│       └── main.go           # Go REST API server entry point (API-only)
+│
+│
 ├── internal/
 │   ├── auth/                 # Auth0 JWT middleware
 │   ├── handlers/             # HTTP route handlers
@@ -626,8 +629,7 @@ kyomei/
 │   ├── recommendations/      # Tag-matching scoring logic
 │   └── models/               # Go structs for DB entities
 ├── migrations/               # golang-migrate .sql files
-├── web/                      # Compiled React dist (served by Go)
-├── frontend/                 # React (TypeScript) source
+├── frontend/                 # React (TypeScript) source — deployed independently to Vercel
 │   ├── src/
 │   │   ├── pages/
 │   │   ├── components/
@@ -635,8 +637,8 @@ kyomei/
 │   └── package.json
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml        # GitHub Actions CI/CD
-└── railway.toml              # Railway deployment config
+│       └── deploy.yml        # GitHub Actions CI/CD (backend → Railway)
+└── railway.toml               # Railway deployment config
 ```
 
 ---
@@ -645,12 +647,14 @@ kyomei/
 
 | Risk | Impact | Mitigation |
 |---|---|---|
-| Go learning curve slows development | Medium | Dedicate summer to Go  |
+| Go learning curve slows development | Medium | Dedicate summer to Go |
 | Auth0 JWT validation misconfiguration | High — security gap | Follow Auth0's Go SDK guide; test with expired/invalid tokens |
 | Schema design mistakes | High — hard to fix post-deploy | Validate schema manually in PostgreSQL sandbox before first migration |
 | Poor recommendation quality | High — kills engagement | Manually validate algorithm on 10+ test profiles before launch |
 | Recommendation cache staleness | Medium — stale recs | Invalidate cache on every new rating event |
 | Performance bottlenecks | Medium — affects retention | Indexes on user_id, anime_id; profile slow queries with EXPLAIN ANALYZE |
+| CORS misconfiguration between Vercel frontend and Railway backend | Medium — broken API calls in production | Explicitly whitelist frontend origin; test cross-origin requests before launch |
+| AniList rate limiting during catalog seeding | Low-Medium — slows seed script | Stay within 100→300 seed strategy (well under rate limit); add retry/backoff on 429s |
 
 ---
 
@@ -666,7 +670,8 @@ kyomei/
 - [ ] Sentry configured on backend and frontend
 - [ ] Amplitude events firing for key actions (vibe check complete, rating submitted, rec clicked)
 - [ ] golang-migrate migrations run cleanly from fresh database
-- [ ] GitHub Actions pipeline deploys to Railway on merge to main
+- [ ] GitHub Actions pipeline deploys backend to Railway on merge to main; frontend deploys to Vercel
+- [ ] CORS verified between Vercel frontend and Railway backend
 - [ ] Production deployment successful
 
 ---
@@ -682,6 +687,7 @@ kyomei/
 - Social login (Google, Discord via Auth0)
 - Anthropic Claude integration (recommendation explanations or conversational discovery)
 - OpenAPI spec + TypeScript type generation from Go handlers
+- AWS EC2/S3 learning exercise (temporary — a few weeks, then revert to Railway/Vercel)
 
 ### Phase 3 (Months 5-6): Scale & Expand
 - Mobile app (React Native)
@@ -700,7 +706,7 @@ kyomei/
 
 | Term | Definition |
 |---|---|
-| Vibe Check | 5-question survey capturing user taste profile |
+| Vibe Check | 6-question survey capturing user taste profile (more abstract/indirect phrasing) |
 | Tag Matching | Algorithm that matches anime genres to user preferences |
 | CTR | Click-through rate (% of users who click a recommendation) |
 | Watchlist | User's personalized queue (Plan to Watch → Watching → Completed → Dropped) |
@@ -714,5 +720,5 @@ kyomei/
 ---
 
 **Document Owner:** @David Raet
-**Version:** 2.1
+**Version:** 2.2
 **Last Updated:** August 6th, 2026
