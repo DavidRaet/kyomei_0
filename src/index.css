@@ -35,6 +35,18 @@
   --radius-lg: 10px;
 }
 
+/* ============================================================
+   Responsive breakpoint scale — every @media max-width in this
+   file should use one of these five values. Retrofit to the
+   nearest tier instead of inventing new numbers.
+
+   1400px — wide desktop → laptop
+   1100px — laptop → tablet landscape
+   900px  — tablet
+   640px  — large phone / small tablet
+   480px  — phone
+   ============================================================ */
+
 * { box-sizing: border-box; }
 
 html, body {
@@ -207,6 +219,16 @@ input { font: inherit; color: inherit; background: none; border: 0; outline: 0; 
   text-transform: uppercase;
 }
 .top-meta .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--violet-400); box-shadow: 0 0 10px var(--violet-400); }
+
+/* Phone tier: collapse the rail grid and let the topbar wrap */
+@media (max-width: 480px) {
+  .app { grid-template-columns: 1fr; }
+  .rail { display: none; }
+  .main { padding: 0 18px 96px; }
+
+  .topbar { flex-wrap: wrap; row-gap: 10px; }
+  .top-meta { display: none; }
+}
 
 /* ============================================================
    Hero / Search
@@ -604,7 +626,7 @@ input { font: inherit; color: inherit; background: none; border: 0; outline: 0; 
 .orbit:hover .orbit-ring-line { animation-play-state: paused; }
 
 /* Below 1280px the orbit would intrude on the title/search — hide it cleanly */
-@media (max-width: 1440px) {
+@media (max-width: 1400px) {
   .orbit { display: none; }
 }
 
@@ -680,7 +702,7 @@ input { font: inherit; color: inherit; background: none; border: 0; outline: 0; 
 .grid-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 
 @media (max-width: 1400px) { .grid-6 { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
-@media (max-width: 1180px) { .grid-6 { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 1100px) { .grid-6 { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 @media (max-width:  900px) { .grid-6 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (max-width:  640px) { .grid-6 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
