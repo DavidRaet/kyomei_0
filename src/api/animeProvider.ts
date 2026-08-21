@@ -4,6 +4,7 @@ import type { AnimeListParams } from './types';
 import { withCache } from './cache';
 import { anilistGetAnimeList, anilistGetAnimeById } from './anilist';
 import { jikanGetAnimeList, jikanGetAnimeById, jikanGetCharacters } from './jikan';
+import { isKyomeiApiEnabled, kyomeiApiSearchAnime, kyomeiApiGetTrending, kyomeiApiGetSeasonal } from './kyomeiApi';
 
 export type { AnimeListParams } from './types';
 
@@ -14,7 +15,7 @@ const TTL_MS = {
   detail: 30 * 60 * 1000,
 } as const;
 
-function logSource(op: string, source: 'anilist' | 'jikan-fallback'): void {
+function logSource(op: string, source: 'anilist' | 'kyomei-api' | 'jikan-fallback'): void {
   if (import.meta.env.DEV) {
     console.info(`[animeProvider] ${op} served by ${source}`);
   }
@@ -34,6 +35,18 @@ export async function getAnimeList(params: AnimeListParams): Promise<Anime[]> {
     key,
     ttl,
     async () => {
+      if (isKyomeiApiEnabled()) {
+        try {
+          const result =
+            params.mode === 'search' ? await kyomeiApiSearchAnime(params.query) :
+            params.mode === 'trending' ? await kyomeiApiGetTrending(params.limit) :
+            await kyomeiApiGetSeasonal(params.limit);
+          logSource(`getAnimeList(${params.mode})`, 'kyomei-api');
+          return result;
+        } catch {
+          // fall through to the anilist -> jikan chain below
+        }
+      }
       try {
         const result = await anilistGetAnimeList(params);
         logSource(`getAnimeList(${params.mode})`, 'anilist');
