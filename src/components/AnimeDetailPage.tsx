@@ -19,8 +19,8 @@ function cap(s: string | null | undefined): string | null {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-function bannerOf(a: AnimeDetail): string | null {
-  return a.trailer?.images?.maximum_image_url || a.trailer?.images?.large_image_url || null;
+function fmtDuration(minutes: number | null): string | null {
+  return minutes != null ? `${minutes} min per ep` : null;
 }
 
 // ── sub-components ────────────────────────────────────────────────────────────
@@ -35,31 +35,28 @@ function MetaItem({ label, value }: { label: string; value: string | number | nu
 }
 
 function CharCard({ entry }: { entry: CharacterEntry }) {
-  const ch = entry.character;
   const va =
-    entry.voice_actors.find((v) => v.language === 'Japanese') || entry.voice_actors[0];
-  const chImg = ch.images?.webp?.image_url || ch.images?.jpg?.image_url;
-  const vaImg = va?.person.images.jpg.image_url ?? '';
+    entry.voiceActors.find((v) => v.language === 'Japanese') || entry.voiceActors[0];
 
   return (
     <div className="d-char">
       <div className="d-char-side left">
         <div className="d-char-thumb">
-          {chImg && <img src={chImg} alt={ch.name} loading="lazy" />}
+          {entry.image && <img src={entry.image} alt={entry.name} loading="lazy" />}
         </div>
         <div className="d-char-text">
-          <div className="d-char-name">{ch.name}</div>
+          <div className="d-char-name">{entry.name}</div>
           <div className="d-char-role">{entry.role}</div>
         </div>
       </div>
       {va && (
         <div className="d-char-side right">
           <div className="d-char-text r">
-            <div className="d-char-name">{va.person.name}</div>
+            <div className="d-char-name">{va.name}</div>
             <div className="d-char-role">{va.language}</div>
           </div>
           <div className="d-char-thumb">
-            {vaImg && <img src={vaImg} alt={va.person.name} loading="lazy" />}
+            {va.image && <img src={va.image} alt={va.name} loading="lazy" />}
           </div>
         </div>
       )}
@@ -127,10 +124,10 @@ export function AnimeDetailPage() {
     return <ErrorState message="Could not load anime details." onRetry={() => { }} />;
   }
 
-  const cover = animeDetail.images?.webp?.large_image_url || animeDetail.images?.jpg?.large_image_url;
-  const banner = bannerOf(animeDetail);
-  const studio = animeDetail.studios.map((s) => s.name).join(', ');
-  const title = animeDetail.title_english || animeDetail.title;
+  const cover = animeDetail.image;
+  const banner = animeDetail.trailerImage;
+  const studio = animeDetail.studios.join(', ');
+  const title = animeDetail.titleEnglish || animeDetail.titleRomaji || '';
 
   const sortedChars = (characters ?? [])
     .slice()
@@ -147,20 +144,7 @@ export function AnimeDetailPage() {
       ? String(animeDetail.year)
       : null;
 
-  const watchlistAnime: Anime = {
-    mal_id: animeDetail.mal_id,
-    titleEnglish: title,
-    titleJp: animeDetail.title_japanese ?? undefined,
-    image: cover,
-    score: animeDetail.score,
-    episodes: animeDetail.episodes,
-    year: animeDetail.year,
-    season: animeDetail.season,
-    status: animeDetail.status,
-    format: animeDetail.type ?? 'TV',
-    genres: animeDetail.genres.map((g) => g.name),
-    studios: animeDetail.studios.map((s) => s.name),
-  };
+  const watchlistAnime: Anime = { ...animeDetail, titleEnglish: title };
 
   return (
     <div className="detail">
@@ -181,7 +165,7 @@ export function AnimeDetailPage() {
         </nav>
         <div className="top-meta">
           <span className="dot" />
-          <span>Live · AniList</span>
+          <span>Live · Kyomei API</span>
         </div>
       </header>
 
@@ -205,11 +189,11 @@ export function AnimeDetailPage() {
         <div className="d-head-text">
           <div className="d-eyebrow">
             <span className="dot" />
-            {animeDetail.genres.slice(0, 3).map((g) => g.name).join(' · ') || 'Anime'}
+            {animeDetail.genres.slice(0, 3).join(' · ') || 'Anime'}
           </div>
           <h1 className="d-title">{title}</h1>
-          {animeDetail.title_japanese && (
-            <div className="d-title-jp">{animeDetail.title_japanese}</div>
+          {animeDetail.titleJp && (
+            <div className="d-title-jp">{animeDetail.titleJp}</div>
           )}
           {animeDetail.synopsis && <p className="d-synopsis">{animeDetail.synopsis}</p>}
         </div>
@@ -223,12 +207,12 @@ export function AnimeDetailPage() {
             Information<span className="jp">情報</span>
           </div>
           <MetaItem label="Studio" value={studio} />
-          <MetaItem label="Format" value={animeDetail.type} />
+          <MetaItem label="Format" value={animeDetail.format} />
           <MetaItem label="Episodes" value={animeDetail.episodes} />
-          <MetaItem label="Episode Duration" value={animeDetail.duration} />
+          <MetaItem label="Episode Duration" value={fmtDuration(animeDetail.durationMinutes)} />
           <MetaItem label="Status" value={animeDetail.status} />
-          <MetaItem label="Start Date" value={fmtDate(animeDetail.aired?.from)} />
-          <MetaItem label="End Date" value={fmtDate(animeDetail.aired?.to)} />
+          <MetaItem label="Start Date" value={fmtDate(animeDetail.airedFrom)} />
+          <MetaItem label="End Date" value={fmtDate(animeDetail.airedTo)} />
           <MetaItem label="Season" value={seasonValue} />
         </aside>
 
@@ -256,7 +240,7 @@ export function AnimeDetailPage() {
           ) : (
             <div className="d-char-grid">
               {sortedChars.slice(0, 12).map((entry) => (
-                <CharCard key={entry.character.mal_id} entry={entry} />
+                <CharCard key={entry.mal_id} entry={entry} />
               ))}
             </div>
           )}
@@ -266,7 +250,7 @@ export function AnimeDetailPage() {
       <footer className="foot">
         <div>© MMXXVI · Kyomei</div>
         <div className="jp">共鳴 - 響き合う物語の索引</div>
-        <div>Powered by AniList, fallback via MAL</div>
+        <div>Powered by Kyomei API</div>
       </footer>
     </div>
   );

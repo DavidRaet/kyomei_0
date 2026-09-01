@@ -4,7 +4,7 @@ A refresher on how Kyomei's client-side response cache works, written as part of
 
 ## The problem it solves
 
-Every anime list/detail/character fetch used to hit the network every single time a component mounted or re-fetched — even if the exact same request had just succeeded a second ago (e.g. navigating away from the home page and back re-fetches trending/seasonal from scratch). That's wasted requests against APIs that are either slow (Jikan) or rate-limited (both, to varying degrees).
+Every anime list/detail/character fetch used to hit the network every single time a component mounted or re-fetched — even if the exact same request had just succeeded a second ago (e.g. navigating away from the home page and back re-fetches trending/seasonal from scratch). That's wasted requests against `kyomei_api`, which is itself rate-limited per client IP.
 
 The fix is a **cache**: remember the result of a request for a while, and serve the remembered value instead of re-fetching, as long as it's still "fresh enough."
 
@@ -68,7 +68,7 @@ There's no single "right" TTL — it's a trade-off between *freshness* (short TT
 
 ## Why cache the *resolved* result, not the source
 
-`animeProvider.ts` tries AniList first and falls back to Jikan on failure. The cache key doesn't know or care which one actually answered — it caches whatever came back. That's a deliberate choice: if AniList happens to be down for a few minutes and a request falls back to Jikan, we don't want to retry the (currently-down) AniList on every subsequent request within the TTL window — we just want the answer, from whichever source provided it, remembered for a while.
+`animeProvider.ts` now calls `kyomei_api` (`src/api/kyomeiApi.ts`) exclusively — the AniList-primary/Jikan-fallback logic this cache was originally built alongside has moved server-side into `kyomei_api` itself. The cache key just stores whatever `kyomei_api` returned; it doesn't need to know or care how `kyomei_api` produced that answer internally.
 
 ## Why a `key` string at all?
 
