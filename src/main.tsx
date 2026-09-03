@@ -24,7 +24,7 @@ createRoot(document.getElementById('root') as HTMLElement).render(
 
 export default function Root() {
   const navigate = useNavigate();
-  const limit = 12;
+  const limit = 24;
 
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
