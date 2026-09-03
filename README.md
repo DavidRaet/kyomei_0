@@ -1,8 +1,8 @@
 # Kyomei (共鳴 - "resonance")
 
-Kyomei is a personal anime discovery app: search and browse anime via the [Jikan API](https://jikan.moe/), filter results, view detail pages, and keep a localStorage-backed watchlist.
+Kyomei is a personal anime discovery app: search and browse anime through the Kyomei API, filter results, view detail pages, and keep a localStorage-backed watchlist.
 
-> **Current scope:** this is a pure client-side SPA. There is no backend, no auth, and no database - everything runs in the browser and talks directly to Jikan. See [Roadmap](#roadmap--future-vision) below for what's planned vs. what exists today.
+> **Current scope:** this is a client-side SPA backed by the Kyomei API. There is no auth or database, and the browser does not connect directly to the anime data provider. See [Roadmap](#roadmap--future-vision) below for what's planned vs. what exists today.
 
 ## Features
 
@@ -28,7 +28,7 @@ npm install
 npm run dev
 ```
 
-No API key or `.env` setup is needed - Jikan is a public, unauthenticated API.
+No API key or `.env` setup is needed to run the frontend locally.
 
 ## Available scripts
 
@@ -52,9 +52,9 @@ No API key or `.env` setup is needed - Jikan is a public, unauthenticated API.
 
 See [CLAUDE.md](CLAUDE.md) for the full architecture writeup, including data-shape details and known stubs.
 
-## External API
+## Anime data
 
-All data comes from [Jikan v4](https://docs.api.jikan.moe/) (an unofficial MyAnimeList REST API), fetched directly from the client with no auth and no backend proxy. It's rate-limited to roughly 3 requests/second - see `CLAUDE.md` for the specific endpoints in use.
+The frontend fetches anime data through the Kyomei API, which is powered by [AniList](https://anilist.co/). The browser does not call AniList directly.
 
 ## Roadmap / future vision
 
@@ -64,4 +64,3 @@ All data comes from [Jikan v4](https://docs.api.jikan.moe/) (an unofficial MyAni
 
 - The retry button on error states (`onRetry`) is currently a no-op stub - it doesn't re-trigger the failed fetch
 - No persistence beyond the browser's `localStorage` (watchlist only - search/filter state resets on reload)
-- No backend proxy, so Jikan's rate limit is exposed directly to the client

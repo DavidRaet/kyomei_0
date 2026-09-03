@@ -250,7 +250,7 @@ export default function App({
         <footer className="foot">
           <div>© MMXXVI · Kyomei</div>
           <div className="jp">共鳴 - 響き合う物語の索引</div>
-          <div>Powered by AniList, fallback via MAL</div>
+          <div>Powered by AniList</div>
         </footer>
       </main>
 

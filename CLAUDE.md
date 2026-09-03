@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Kyomei (共鳴 — "resonance") is David's personal anime discovery app: search/browse anime, filter results, view anime detail pages, and keep a localStorage-backed watchlist.
 
-`docs/prd/Kyomei-MVP-PRD-v2.md` describes a much larger future vision (Go backend, Auth0 auth, PostgreSQL, a taste-profile recommendation engine, ratings, social features). **None of that exists yet** — the current app is a pure client-side SPA, with no backend, no auth, and no database. Treat the PRD as directional/aspirational, not a description of current architecture. `docs/prd/p0.md` extracts just the P0 items from that PRD for reference. `docs/caching-layer.md` is a from-scratch writeup of the client-side response cache (`src/api/cache.ts`), written as part of the AniList migration (see below) — read it before touching cache TTLs or the memory/localStorage layering.
+`docs/prd/Kyomei-MVP-PRD-v2.md` describes a much larger future vision (Go backend, Auth0 auth, PostgreSQL, a taste-profile recommendation engine, ratings, social features). **Most of that doesn't exist yet** — there's no auth and no database, and this repo (`kyomei_0`) is still a client-side SPA with all watchlist state in `localStorage`. It does now have a backend counterpart, `kyomei_api` (a separate repo, FastAPI), which orchestrates AniList lookups and caching server-side; `CONTRACT.md` at the repo root is the source of truth for that HTTP boundary — read it before changing anything in `src/api/`. Treat the PRD as directional/aspirational beyond what `CONTRACT.md` documents as live. `docs/prd/p0.md` extracts just the P0 items from that PRD for reference. `docs/caching-layer.md` is a from-scratch writeup of the client-side response cache (`src/api/cache.ts`) — read it before touching cache TTLs or the memory/localStorage layering.
 
 ## Commands
 
@@ -27,11 +27,11 @@ CI (`.github/workflows/ci_cd_workflow.yml`) runs lint + `npm test -- --coverage`
 
 `AnimeDetailPage` and `WatchlistPage` (in `src/components/`) are route components in their own right, not children of `App` — each owns its own state and fetches independently (also via `animeProvider.ts`) rather than receiving props from `main.tsx`.
 
-**Data fetching (`src/api/`) — AniList-first with a Jikan fallback.** `animeProvider.ts` is the only module the rest of the app should import for anime data (`getAnimeList`, `getAnimeById`, `getCharacters`). Each function tries AniList's GraphQL API (`anilist.ts`) first and falls back to Jikan v4 REST (`jikan.ts`) on any failure (network error, timeout, GraphQL error). In dev, `console.info` logs which source actually answered each call. Every call is wrapped in `withCache` (`cache.ts`) — see `docs/caching-layer.md` for the full design; in short: an in-memory `Map` plus an optional `localStorage` layer, keyed by request identity (e.g. `list:trending:12`, `detail:{id}`), with per-endpoint TTLs (trending 15 min, seasonal 60 min, search 2 min/memory-only, detail/characters 30 min). The cache stores whatever source actually resolved the request — it doesn't retry AniList just because a fallback occurred.
+**Data fetching (`src/api/`) — `kyomei_api`-only.** `animeProvider.ts` is the only module the rest of the app should import for anime data (`getAnimeList`, `getAnimeById`, `getCharacters`); it delegates every call to `kyomeiApi.ts`, which calls the `kyomei_api` backend (base URL from `VITE_KYOMEI_API_BASE_URL`) per the endpoints in `CONTRACT.md`. There is no client-side AniList/Jikan fallback anymore — that orchestration now lives server-side, inside `kyomei_api` itself. Every call is wrapped in `withCache` (`cache.ts`) — see `docs/caching-layer.md` for the full design; in short: an in-memory `Map` plus an optional `localStorage` layer, keyed by request identity (e.g. `list:trending:12`, `detail:{id}`), with per-endpoint TTLs (trending 15 min, seasonal 60 min, search 2 min/memory-only, detail/characters 30 min).
 
 **Data shapes** (`src/types/`):
-- `Anime` (`types.ts`) is the canonical normalized shape used everywhere except the detail page. Two independent normalizers convert raw provider responses into it: `normalizeJikanAnime` in `jikan.ts` (from `JikanAnimeRaw`, `jikan-raw-type.ts`) and the AniList-side mapper in `anilist.ts` (from `AniListMediaRaw`, `anilist-raw-type.ts`, using `FORMAT_MAP`/`STATUS_MAP` to translate AniList's enum values to Jikan-style strings so downstream filtering code stays provider-agnostic).
-- `AnimeDetail` (`anime-detail.ts`) is a separate, richer shape used by `AnimeDetailPage` for `/anime/:id` — populated by either provider, not derived from `Anime`.
+- `Anime` (`types.ts`) is the canonical normalized shape used everywhere except the detail page, mapped from `kyomei_api`'s `AnimeSummary` (`CONTRACT.md`) by `mapSummaryToAnime` in `kyomeiApi.ts` — a straight field-for-field conversion (only `malId` → `mal_id` differs).
+- `AnimeDetail` (`anime-detail.ts`) extends `Anime` with the detail-page-only fields (`titleRomaji`, `synopsis`, `durationMinutes`, `airedFrom`/`airedTo`, `trailerImage`), mirroring `CONTRACT.md`'s `AnimeDetail extends AnimeSummary`. `CharacterEntry` similarly mirrors `CharacterSummary`. Both are mapped from the raw contract shape by `kyomeiApi.ts`.
 - `WatchlistEntry` (`watchlist.ts`) extends `Anime` with `status` and `addedAt`.
 - `ActiveFilters`/`FilterKey` (`types.ts`) plus the option constants in `filter-options.ts` (`GENRE_OPTIONS`, `YEAR_OPTIONS`, etc.) drive `FilterDropdown`. Filtering is entirely client-side over already-fetched results (`doesMatchFilter` in `main.tsx`); the year filter buckets by decade via `matchesDecadeYear` (`src/utils/yearMatch.ts`).
 
@@ -51,13 +51,4 @@ CI (`.github/workflows/ci_cd_workflow.yml`) runs lint + `npm test -- --coverage`
 
 ## External APIs
 
-**AniList GraphQL** (`https://graphql.anilist.co`) is the primary source, called via `POST` from `src/api/anilist.ts` with a 6s abort-controller timeout. No auth required for the public queries used here.
-
-**Jikan v4** (`https://api.jikan.moe/v4`, unofficial MyAnimeList REST) is the fallback, used automatically whenever an AniList call fails. No auth, rate-limited to ~3 req/sec; `jikan.ts` retries once on a `504` before giving up. Endpoints in use:
-- Trending: `GET /top/anime?limit={n}`
-- Seasonal: `GET /seasons/now?limit={n}`
-- Search: `GET /anime?q={query}&limit={n}&order_by=score&sort=desc`
-- Detail: `GET /anime/{id}`
-- Characters: `GET /anime/{id}/characters`
-
-Both providers are fetched directly from the client — there is no backend proxy. List endpoints from Jikan wrap results in `{ data: [...] }`; always unwrap. Nested optional fields (`images?.webp?.image_url`, etc.) should be accessed with `?.` — neither provider guarantees every field is present on every title.
+**`kyomei_api`** is the only backend `kyomei_0` talks to for anime data — see `CONTRACT.md` for the full endpoint list (`GET /v1/anime/{malId}`, `/v1/anime/search`, `/v1/anime/trending`, `/v1/anime/seasonal`, `/v1/anime/{malId}/characters`), request/response shapes, and error codes. `kyomeiApi.ts` calls it via `fetch` with a 6s abort-controller timeout, no auth (v1 is unauthenticated). `kyomei_api` itself orchestrates AniList server-side and is rate-limited per client IP (`429` with `Retry-After`) — `kyomei_0` has no retry logic of its own for that. List endpoints wrap results in `{ data: [...] }`; always unwrap. If an endpoint, field, or status code isn't in `CONTRACT.md`, don't assume it exists.

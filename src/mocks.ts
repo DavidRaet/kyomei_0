@@ -1,6 +1,6 @@
 import type { Anime } from './types/types';
 
-// Mock anime data for previewing the design before the real Jikan integration.
+// Mock anime data for previewing the design without a live API.
 // Image URLs point at MyAnimeList's CDN; if any go stale, the design's
 // conditional rendering falls back to the surface background cleanly.
 

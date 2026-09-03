@@ -1,14 +1,11 @@
 import type { Anime } from '../types/types';
+import type { AnimeDetail, CharacterEntry } from '../types/anime-detail';
 
 const REQUEST_TIMEOUT_MS = 6000;
-const SEARCH_LIMIT = 24; // matches the search limit anilist.ts/jikan.ts already use
+const SEARCH_LIMIT = 24; // keeps the client search result set manageable
 
 function baseUrl(): string {
   return import.meta.env.VITE_KYOMEI_API_BASE_URL ?? 'http://localhost:8000';
-}
-
-export function isKyomeiApiEnabled(): boolean {
-  return import.meta.env.VITE_USE_KYOMEI_API === 'true';
 }
 
 interface AnimeSummaryRaw {
@@ -24,6 +21,30 @@ interface AnimeSummaryRaw {
   format: string;
   genres: string[];
   studios: string[];
+}
+
+interface AnimeDetailRaw extends AnimeSummaryRaw {
+  titleRomaji?: string;
+  synopsis: string | null;
+  durationMinutes: number | null;
+  airedFrom: string | null;
+  airedTo: string | null;
+  trailerImage: string | null;
+}
+
+interface VoiceActorRaw {
+  language: string;
+  name: string;
+  image: string;
+}
+
+interface CharacterSummaryRaw {
+  malId: number;
+  name: string;
+  image: string;
+  role: string;
+  favorites: number;
+  voiceActors: VoiceActorRaw[];
 }
 
 function mapSummaryToAnime(s: AnimeSummaryRaw): Anime {
@@ -43,7 +64,30 @@ function mapSummaryToAnime(s: AnimeSummaryRaw): Anime {
   };
 }
 
-async function kyomeiApiFetchList(path: string): Promise<Anime[]> {
+function mapDetailRawToAnimeDetail(raw: AnimeDetailRaw): AnimeDetail {
+  return {
+    ...mapSummaryToAnime(raw),
+    titleRomaji: raw.titleRomaji,
+    synopsis: raw.synopsis,
+    durationMinutes: raw.durationMinutes,
+    airedFrom: raw.airedFrom,
+    airedTo: raw.airedTo,
+    trailerImage: raw.trailerImage,
+  };
+}
+
+function mapCharacterRawToEntry(raw: CharacterSummaryRaw): CharacterEntry {
+  return {
+    mal_id: raw.malId,
+    name: raw.name,
+    image: raw.image,
+    role: raw.role,
+    favorites: raw.favorites,
+    voiceActors: raw.voiceActors,
+  };
+}
+
+async function kyomeiApiFetch<T>(path: string): Promise<T> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
   try {
@@ -53,10 +97,15 @@ async function kyomeiApiFetchList(path: string): Promise<Anime[]> {
       const message = body?.error?.message ?? `kyomei_api request failed (status ${response.status})`;
       throw new Error(message);
     }
-    return (body.data as AnimeSummaryRaw[]).map(mapSummaryToAnime);
+    return body as T;
   } finally {
     clearTimeout(timeout);
   }
+}
+
+async function kyomeiApiFetchList(path: string): Promise<Anime[]> {
+  const body = await kyomeiApiFetch<{ data: AnimeSummaryRaw[] }>(path);
+  return body.data.map(mapSummaryToAnime);
 }
 
 export function kyomeiApiSearchAnime(query: string): Promise<Anime[]> {
@@ -69,4 +118,14 @@ export function kyomeiApiGetTrending(limit: number): Promise<Anime[]> {
 
 export function kyomeiApiGetSeasonal(limit: number): Promise<Anime[]> {
   return kyomeiApiFetchList(`/v1/anime/seasonal?limit=${limit}`);
+}
+
+export async function kyomeiApiGetAnimeById(malId: number): Promise<AnimeDetail> {
+  const raw = await kyomeiApiFetch<AnimeDetailRaw>(`/v1/anime/${malId}`);
+  return mapDetailRawToAnimeDetail(raw);
+}
+
+export async function kyomeiApiGetCharacters(malId: number): Promise<CharacterEntry[]> {
+  const body = await kyomeiApiFetch<{ data: CharacterSummaryRaw[] }>(`/v1/anime/${malId}/characters`);
+  return body.data.map(mapCharacterRawToEntry);
 }
