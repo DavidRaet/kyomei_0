@@ -3,6 +3,9 @@ import type { WatchlistEntry } from '../types/watchlist';
 import { useWatchlist, removeFromWatchlist } from '../hooks/useWatchlist';
 import { IconSearch, IconCaret, IconX } from './icons';
 import { useState } from 'react';
+import { AppHeader } from './AppHeader';
+import { AppFooter } from './AppFooter';
+import { MediaImage } from './MediaImage';
 
 function progressText(e: WatchlistEntry): string {
   const tot = e.episodes ?? null;
@@ -10,36 +13,16 @@ function progressText(e: WatchlistEntry): string {
   return tot ? `- / ${tot}` : '-';
 }
 
-function WlTopBar() {
-  return (
-    <header className="topbar d-topbar">
-      <div className="brand">
-        <Link className="d-back" to="/" aria-label="Back to browse">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
-        </Link>
-        <div className="brand-mark">Kyomei</div>
-        <div className="brand-jp">共鳴</div>
-      </div>
-      <nav className="nav">
-        <Link to="/">Browse</Link>
-        <Link to="/watchlist" className="active">Watchlist</Link>
-      </nav>
-      <div className="top-meta">
-        <span className="dot" />
-        <span>Local · Saved</span>
-      </div>
-    </header>
-  );
-}
-
 function WlRow({ e }: { e: WatchlistEntry }) {
   return (
-    <Link className="wl-row" to={`/anime/${e.mal_id}`}>
+    <article className="wl-row">
       <div className="wl-c-title">
-        <div className="wl-thumb">{e.image && <img src={e.image} alt="" loading="lazy" />}</div>
-        <span className="wl-title">{e.titleEnglish}</span>
+        <div className="wl-thumb">
+          <MediaImage src={e.image} alt="" decorative />
+        </div>
+        <Link className="wl-title" to={`/anime/${e.mal_id}`}>
+          {e.titleEnglish}
+        </Link>
       </div>
       <div className="wl-c-score">{e.score ? e.score.toFixed(1) : '-'}</div>
       <div className="wl-c-prog">{progressText(e)}</div>
@@ -48,15 +31,12 @@ function WlRow({ e }: { e: WatchlistEntry }) {
         className="wl-remove"
         type="button"
         title="Remove from watchlist"
-        onClick={(ev) => {
-          ev.preventDefault();
-          ev.stopPropagation();
-          removeFromWatchlist(e.mal_id);
-        }}
+        aria-label={`Remove ${e.titleEnglish} from watchlist`}
+        onClick={() => removeFromWatchlist(e.mal_id)}
       >
         <IconX />
       </button>
-    </Link>
+    </article>
   );
 }
 
@@ -114,8 +94,8 @@ export function WatchlistPage() {
   const view = filteredWatchList;
 
   return (
-    <div className="wl">
-      <WlTopBar />
+    <div className="wl page-shell">
+      <AppHeader active="watchlist" status="Local · Saved" />
 
       <section className="wl-hero">
         <div className="hero-eyebrow">
@@ -213,11 +193,7 @@ export function WatchlistPage() {
         </main>
       </div>
 
-      <footer className="foot">
-        <div>© MMXXVI · Kyomei</div>
-        <div className="jp">共鳴 - 響き合う物語の索引</div>
-        <div>Saved locally</div>
-      </footer>
+      <AppFooter source="Saved locally" />
     </div>
   );
 }

@@ -15,7 +15,8 @@ import { IconSearch } from './components/icons';
 import { PosterOrbit } from './components/PosterOrbit';
 import { Section } from './components/Section';
 import { SkeletonGrid } from './components/SkeletonGrid';
-import { Link } from 'react-router-dom';
+import { AppFooter } from './components/AppFooter';
+import { AppHeader } from './components/AppHeader';
 
 const FILTER_KEYS: FilterKey[] = ['Genre', 'Year', 'Season', 'Format', 'Status'];
 
@@ -93,26 +94,7 @@ export default function App({
 
       {/* Main column */}
       <main className="main">
-        {/* Top bar */}
-        <header className="topbar">
-          <div className="brand">
-            <div className="brand-mark">Kyomei</div>
-            <div className="brand-jp">共鳴</div>
-            <div className="brand-sub">An Anime Index</div>
-          </div>
-          <nav className="nav">
-            <Link className='active' to='/'>
-              Browse
-            </Link>
-            <Link to='/watchlist'>
-              Watchlist
-            </Link>
-          </nav>
-          <div className="top-meta">
-            <span className="dot" />
-            <span>Live · AniList</span>
-          </div>
-        </header>
+        <AppHeader active="browse" status="Live · AniList" />
 
         {/* Hero / Search */}
         <section className="hero">
@@ -255,11 +237,7 @@ export default function App({
           </>
         )}
 
-        <footer className="foot">
-          <div>© MMXXVI · Kyomei</div>
-          <div className="jp">共鳴 - 響き合う物語の索引</div>
-          <div>Powered by AniList</div>
-        </footer>
+        <AppFooter source="Powered by AniList" />
       </main>
 
       {/* Right rail */}
