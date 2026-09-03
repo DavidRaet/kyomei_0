@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import type { MouseEvent } from 'react';
 import type { Anime, CardVariant } from '../types/types';
 import { IconStar } from './icons';
+import { MediaImage } from './MediaImage';
 
 interface AnimeCardProps {
   anime: Anime;
@@ -11,9 +12,10 @@ interface AnimeCardProps {
 }
 
 export function AnimeCard({ anime, variant, index, onNavigate }: AnimeCardProps) {
-  const ref = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLButtonElement>(null);
 
-  const onMove = (e: MouseEvent<HTMLDivElement>) => {
+  const onMove = (e: MouseEvent<HTMLButtonElement>) => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const el = ref.current;
     if (!el) return;
     const r = el.getBoundingClientRect();
@@ -45,12 +47,20 @@ export function AnimeCard({ anime, variant, index, onNavigate }: AnimeCardProps)
   );
 
   return (
-    <div className="card" ref={ref} onMouseMove={onMove} onMouseLeave={onLeave} onClick={() => onNavigate?.(anime.mal_id)}>
+    <button
+      className="card"
+      type="button"
+      ref={ref}
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+      onClick={() => onNavigate?.(anime.mal_id)}
+      aria-label={`Open ${anime.titleEnglish}`}
+    >
       <div className="card-inner">
         {variant === 'minimal' ? (
           <div className="v-minimal">
             <div className="poster">
-              {anime.image && <img src={anime.image} alt={anime.titleEnglish} loading="lazy" />}
+              <MediaImage src={anime.image} alt={anime.titleEnglish} fallbackText={anime.titleEnglish} />
               {anime.score ? (
                 <div className="score">
                   <IconStar /> {anime.score.toFixed(1)}
@@ -65,7 +75,7 @@ export function AnimeCard({ anime, variant, index, onNavigate }: AnimeCardProps)
         ) : variant === 'editorial' ? (
           <div className="v-editorial">
             <div className="poster">
-              {anime.image && <img src={anime.image} alt={anime.titleEnglish} loading="lazy" />}
+              <MediaImage src={anime.image} alt={anime.titleEnglish} fallbackText={anime.titleEnglish} />
               {anime.score ? (
                 <div className="score">
                   <IconStar /> {anime.score.toFixed(1)}
@@ -89,7 +99,7 @@ export function AnimeCard({ anime, variant, index, onNavigate }: AnimeCardProps)
         ) : (
           <div className="v-poster">
             <div className="poster">
-              {anime.image && <img src={anime.image} alt={anime.titleEnglish} loading="lazy" />}
+              <MediaImage src={anime.image} alt={anime.titleEnglish} fallbackText={anime.titleEnglish} />
               {anime.score ? (
                 <div className="score">
                   <IconStar /> {anime.score.toFixed(1)}
@@ -104,6 +114,6 @@ export function AnimeCard({ anime, variant, index, onNavigate }: AnimeCardProps)
           </div>
         )}
       </div>
-    </div>
+    </button>
   );
 }

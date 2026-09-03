@@ -2,9 +2,12 @@ import type { AnimeDetail, CharacterEntry } from '../types/anime-detail';
 import type { Anime } from '../types/types';
 import { ErrorState } from './ErrorState';
 import { WatchlistCover } from './WatchlistCover';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getAnimeById, getCharacters } from '../api/animeProvider';
+import { AppHeader } from './AppHeader';
+import { AppFooter } from './AppFooter';
+import { MediaImage } from './MediaImage';
 // ── helpers ──────────────────────────────────────────────────────────────────
 
 function fmtDate(iso: string | null | undefined): string | null {
@@ -42,7 +45,7 @@ function CharCard({ entry }: { entry: CharacterEntry }) {
     <div className="d-char">
       <div className="d-char-side left">
         <div className="d-char-thumb">
-          {entry.image && <img src={entry.image} alt={entry.name} loading="lazy" />}
+          <MediaImage src={entry.image} alt={entry.name} fallbackText={entry.name} />
         </div>
         <div className="d-char-text">
           <div className="d-char-name">{entry.name}</div>
@@ -56,7 +59,7 @@ function CharCard({ entry }: { entry: CharacterEntry }) {
             <div className="d-char-role">{va.language}</div>
           </div>
           <div className="d-char-thumb">
-            {va.image && <img src={va.image} alt={va.name} loading="lazy" />}
+            <MediaImage src={va.image} alt={va.name} fallbackText={va.name} />
           </div>
         </div>
       )}
@@ -127,7 +130,16 @@ export function AnimeDetailPage() {
 
   if (fetchStatus === 'loading') return <DetailSkeleton />;
   if (fetchStatus === 'error' || !animeDetail) {
-    return <ErrorState message={detailError ?? 'Could not load anime details.'} onRetry={() => setRetryCount((count) => count + 1)} />;
+    return (
+      <div className="detail page-shell">
+        <AppHeader active="browse" status="Kyomei API" onBack={() => navigate(-1)} />
+        <ErrorState
+          message={detailError ?? 'Could not load anime details.'}
+          onRetry={() => setRetryCount((count) => count + 1)}
+        />
+        <AppFooter source="Powered by Kyomei API" />
+      </div>
+    );
   }
 
   const cover = animeDetail.image;
@@ -153,27 +165,8 @@ export function AnimeDetailPage() {
   const watchlistAnime: Anime = { ...animeDetail, titleEnglish: title };
 
   return (
-    <div className="detail">
-      {/* Top bar */}
-      <header className="topbar d-topbar">
-        <div className="brand">
-          <button className="d-back" onClick={() => navigate(-1)} aria-label="Back to browse">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M15 18l-6-6 6-6" />
-            </svg>
-          </button>
-          <div className="brand-mark">Kyomei</div>
-          <div className="brand-jp">共鳴</div>
-        </div>
-        <nav className="nav">
-          <Link to="/">Browse</Link>
-          <Link to="/watchlist">Watchlist</Link>
-        </nav>
-        <div className="top-meta">
-          <span className="dot" />
-          <span>Live · Kyomei API</span>
-        </div>
-      </header>
+    <div className="detail page-shell">
+      <AppHeader active="browse" status="Live · Kyomei API" onBack={() => navigate(-1)} />
 
       {/* Banner — trailer thumbnail or blurred cover fallback */}
       <div
@@ -253,11 +246,7 @@ export function AnimeDetailPage() {
         </section>
       </div>
 
-      <footer className="foot">
-        <div>© MMXXVI · Kyomei</div>
-        <div className="jp">共鳴 - 響き合う物語の索引</div>
-        <div>Powered by Kyomei API</div>
-      </footer>
+      <AppFooter source="Powered by Kyomei API" />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import type { Anime } from '../types/types';
 import { IconStar, IconPlus, IconCheck } from './icons';
 import { useWatchlist, addToWatchlist, removeFromWatchlist } from '../hooks/useWatchlist';
+import { MediaImage } from './MediaImage';
 
 interface WatchlistCoverProps {
   anime: Anime;
@@ -23,7 +24,7 @@ export function WatchlistCover({ anime, cover, score }: WatchlistCoverProps) {
     <div className="d-cover-col">
       <div className={`d-cover ${inList ? 'in-list' : ''}`}>
         <div className="d-cover-media">
-          {cover && <img src={cover} alt={anime.titleEnglish} />}
+          <MediaImage src={cover} alt={anime.titleEnglish} fallbackText={anime.titleEnglish} />
           <div className="d-static" aria-hidden="true" />
           <div className="d-scan" aria-hidden="true" />
           {score ? (
@@ -41,6 +42,7 @@ export function WatchlistCover({ anime, cover, score }: WatchlistCoverProps) {
             className={`d-cover-overlay ${inList ? 'added' : ''}`}
             onClick={toggle}
             aria-label={inList ? 'Remove from watchlist' : 'Add to watchlist'}
+            aria-pressed={inList}
           >
             <span className="d-cover-cta">{inList ? 'In Watchlist' : 'Add to Watchlist'}</span>
             <span className="d-add-plus">{inList ? <IconCheck /> : <IconPlus />}</span>
