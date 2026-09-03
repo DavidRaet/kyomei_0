@@ -30,6 +30,8 @@ const FILTER_OPTIONS_BY_KEY: Record<FilterKey, readonly string[]> = {
 interface AppProps {
   trending: Anime[] | null;
   seasonal: Anime[] | null;
+  trendingError: string | null;
+  seasonalError: string | null;
   searchResults: Anime[] | null;
   loading: boolean;
   error: string | null;
@@ -52,6 +54,8 @@ interface AppProps {
 export default function App({
   trending,
   seasonal,
+  trendingError,
+  seasonalError,
   searchResults,
   loading,
   error,
@@ -207,7 +211,9 @@ export default function App({
                 </>
               }
             >
-              {trending === null ? (
+              {trendingError ? (
+                <ErrorState message={trendingError} onRetry={onRetryTrending} />
+              ) : trending === null ? (
                 <SkeletonGrid count={12} />
               ) : trending.length === 0 ? (
                 <ErrorState message="Couldn't reach the trending feed." onRetry={onRetryTrending} />
@@ -232,7 +238,9 @@ export default function App({
                 </>
               }
             >
-              {seasonal === null ? (
+              {seasonalError ? (
+                <ErrorState message={seasonalError} onRetry={onRetrySeasonal} />
+              ) : seasonal === null ? (
                 <SkeletonGrid count={12} />
               ) : seasonal.length === 0 ? (
                 <ErrorState message="Couldn't reach the seasonal feed." onRetry={onRetrySeasonal} />

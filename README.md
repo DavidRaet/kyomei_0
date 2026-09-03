@@ -28,7 +28,13 @@ npm install
 npm run dev
 ```
 
-No API key or `.env` setup is needed to run the frontend locally.
+No API key or `.env` setup is needed to run the frontend locally. Requests use
+the Vite `/api` proxy, which targets the deployed Kyomei API by default. To use
+a local `kyomei_api` instance instead, create `.env.local` with:
+
+```bash
+KYOMEI_API_PROXY_TARGET=http://localhost:8000
+```
 
 ## Available scripts
 
@@ -54,7 +60,7 @@ See [CLAUDE.md](CLAUDE.md) for the full architecture writeup, including data-sha
 
 ## Anime data
 
-The frontend fetches anime data through the Kyomei API, which is powered by [AniList](https://anilist.co/). The browser does not call AniList directly.
+The frontend fetches anime data through the Kyomei API, which is powered by [AniList](https://anilist.co/). The browser does not call AniList directly. Browser requests stay same-origin at `/api`; Vite proxies them in development and Vercel rewrites them to the Kyomei API in production.
 
 ## Roadmap / future vision
 

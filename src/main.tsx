@@ -5,7 +5,6 @@ import { AnimeDetailPage } from './components/AnimeDetailPage';
 import { WatchlistPage } from './components/WatchlistPage';
 import './index.css';
 import App from './App';
-import { mockAiring, mockSeasonal } from './mocks';
 import type { ActiveFilters, Anime, FilterKey } from './types/types';
 import type { Season, Format, Status } from './types/filter-options';
 import { matchesDecadeYear } from './utils/yearMatch';
@@ -42,6 +41,8 @@ export default function Root() {
   const [searchResults, setSearchResults] = useState<Anime[] | null>(null);
   const [trending, setTrending] = useState<Anime[] | null>(null);
   const [seasonal, setSeasonal] = useState<Anime[] | null>(null);
+  const [trendingError, setTrendingError] = useState<string | null>(null);
+  const [seasonalError, setSeasonalError] = useState<string | null>(null);
 
   const doesMatchFilter = useCallback((anime: Anime): boolean => {
     const activeSeasonFilterLowerCase = activeFilters.Season?.map(s => s.toLowerCase() as Season) ?? null;
@@ -74,14 +75,11 @@ export default function Root() {
 
   const fetchTrending = useCallback(async () => {
     setLoading(true);
+    setTrendingError(null);
     try {
       setTrending(await getAnimeList({ mode: 'trending', limit }));
     } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('An unknown error occurred');
-      }
+      setTrendingError(err instanceof Error ? err.message : 'An unknown error occurred');
     } finally {
       setLoading(false);
     }
@@ -89,15 +87,11 @@ export default function Root() {
 
   const fetchSeasonal = useCallback(async () => {
     setLoading(true);
-    setError(null);
+    setSeasonalError(null);
     try {
       setSeasonal(await getAnimeList({ mode: 'seasonal', limit }));
     } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('An unknown error occurred');
-      }
+      setSeasonalError(err instanceof Error ? err.message : 'An unknown error occurred');
     } finally {
       setLoading(false);
     }
@@ -131,8 +125,10 @@ export default function Root() {
 
   return (
     <App
-      trending={trending ? trending : mockAiring}
-      seasonal={seasonal ? seasonal : mockSeasonal}
+      trending={trending}
+      seasonal={seasonal}
+      trendingError={trendingError}
+      seasonalError={seasonalError}
       searchResults={filteredSearchResults}
       loading={loading}
       error={error}

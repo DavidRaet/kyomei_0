@@ -91,20 +91,26 @@ export function AnimeDetailPage() {
   const [animeDetail, setAnimeDetail] = useState<AnimeDetail | null>(null);
   const [characters, setCharacters] = useState<CharacterEntry[] | null>(null);
   const [fetchStatus, setFetchStatus] = useState<'loading' | 'success' | 'error'>('success');
+  const [detailError, setDetailError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     let isMounted = true;
     (async () => {
       setAnimeDetail(null);
       setCharacters(null);
+      setDetailError(null);
       setFetchStatus('loading');
       try {
         const detail = await getAnimeById(Number(id));
         if (!isMounted) return;
         setAnimeDetail(detail);
         setFetchStatus('success');
-      } catch {
-        if (isMounted) setFetchStatus('error');
+      } catch (err) {
+        if (isMounted) {
+          setDetailError(err instanceof Error ? err.message : 'Could not load anime details.');
+          setFetchStatus('error');
+        }
         return;
       }
 
@@ -117,11 +123,11 @@ export function AnimeDetailPage() {
       }
     })();
     return () => { isMounted = false; };
-  }, [id]);
+  }, [id, retryCount]);
 
   if (fetchStatus === 'loading') return <DetailSkeleton />;
   if (fetchStatus === 'error' || !animeDetail) {
-    return <ErrorState message="Could not load anime details." onRetry={() => { }} />;
+    return <ErrorState message={detailError ?? 'Could not load anime details.'} onRetry={() => setRetryCount((count) => count + 1)} />;
   }
 
   const cover = animeDetail.image;
