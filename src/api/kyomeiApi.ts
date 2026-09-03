@@ -3,10 +3,7 @@ import type { AnimeDetail, CharacterEntry } from '../types/anime-detail';
 
 const REQUEST_TIMEOUT_MS = 6000;
 const SEARCH_LIMIT = 24; // keeps the client search result set manageable
-
-function baseUrl(): string {
-  return import.meta.env.VITE_KYOMEI_API_BASE_URL ?? 'http://localhost:8000';
-}
+const API_BASE_PATH = '/api';
 
 interface AnimeSummaryRaw {
   malId: number;
@@ -91,11 +88,23 @@ async function kyomeiApiFetch<T>(path: string): Promise<T> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
   try {
-    const response = await fetch(`${baseUrl()}${path}`, { signal: controller.signal });
+    let response: Response;
+    try {
+      response = await fetch(`${API_BASE_PATH}${path}`, { signal: controller.signal });
+    } catch {
+      if (controller.signal.aborted) {
+        throw new Error('Kyomei API request timed out. Please try again.');
+      }
+      throw new Error('Could not reach the Kyomei API. Check your connection and try again.');
+    }
+
     const body = await response.json().catch(() => null);
-    if (!response.ok || !body) {
-      const message = body?.error?.message ?? `kyomei_api request failed (status ${response.status})`;
-      throw new Error(message);
+    if (!response.ok) {
+      const message = body?.error?.message ?? 'The Kyomei API returned an unexpected error.';
+      throw new Error(`Kyomei API request failed (status ${response.status}): ${message}`);
+    }
+    if (!body) {
+      throw new Error(`Kyomei API returned an invalid response (status ${response.status}).`);
     }
     return body as T;
   } finally {
