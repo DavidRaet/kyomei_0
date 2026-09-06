@@ -5,7 +5,7 @@
       "destination": "https://kyomeiapi-production.up.railway.app/:path*"
     },
     {
-      "source": "/:path*",
+      "source": "/((?!__clerk(?:/|$)).*)",
       "destination": "/index.html"
     }
   ]
