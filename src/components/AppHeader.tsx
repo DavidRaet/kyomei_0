@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { Show, UserButton } from '@clerk/react'
 import { IconChevronLeft } from './icons'
 import { useWatchlist } from '../hooks/useWatchlist'
 
@@ -35,8 +36,15 @@ export function AppHeader({ active, status, onBack }: AppHeaderProps) {
         </Link>
       </nav>
       <div className="top-meta">
-        <span className="dot" aria-hidden="true" />
-        <span>{status}</span>
+        <Show when="signed-out">
+          <Link className="auth-link" to="/sign-in">Sign in</Link>
+          <Link className="auth-join" to="/sign-up">Join Kyomei</Link>
+        </Show>
+        <Show when="signed-in">
+          <span className="dot" aria-hidden="true" />
+          <span>{status}</span>
+          <UserButton />
+        </Show>
       </div>
     </header>
   )

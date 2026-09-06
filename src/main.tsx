@@ -1,8 +1,12 @@
 import { StrictMode, useCallback, useState, useEffect, useMemo } from 'react';
 import { createRoot } from 'react-dom/client';
 import { createBrowserRouter, RouterProvider, useNavigate } from 'react-router-dom';
+import { ClerkProvider } from '@clerk/react';
 import { AnimeDetailPage } from './components/AnimeDetailPage';
+import { SignInPage } from './components/SignInPage';
+import { SignUpPage } from './components/SignUpPage';
 import { WatchlistPage } from './components/WatchlistPage';
+import { clerkAppearance } from './auth/clerkAppearance';
 import './index.css';
 import App from './App';
 import type { ActiveFilters, Anime, FilterKey } from './types/types';
@@ -13,12 +17,22 @@ import { getAnimeList } from './api/animeProvider';
 const router = createBrowserRouter([
   { path: '/',          element: <Root /> },
   { path: '/anime/:id', element: <AnimeDetailPage /> },
-  { path: '/watchlist', element: <WatchlistPage /> }
+  { path: '/watchlist', element: <WatchlistPage /> },
+  { path: '/sign-in/*', element: <SignInPage /> },
+  { path: '/sign-up/*', element: <SignUpPage /> },
 ]);
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <ClerkProvider
+      appearance={clerkAppearance}
+      signInUrl="/sign-in"
+      signUpUrl="/sign-up"
+      signInFallbackRedirectUrl="/"
+      signUpFallbackRedirectUrl="/"
+    >
+      <RouterProvider router={router} />
+    </ClerkProvider>
   </StrictMode>
 );
 
