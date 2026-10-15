@@ -1,18 +1,18 @@
 # Kyomei Design Direction
 
-Status: proposed rebrand direction
+Status: Tokyo Editorial palette agreed; implementation not started
 Reference: `C:\Users\david\Downloads\cognitive-architecture-topology-DESIGN.md`
 Scope: visual language and interaction direction for the existing Kyomei anime discovery app
 
 ## Design read
 
-Reading this as: a consumer anime discovery product for people choosing what to watch, with a dark-tech editorial language, leaning toward native CSS tokens, Japanese typographic detail, and restrained spatial motion.
+Reading this as: a consumer anime discovery product for people choosing what to watch, with a paper-and-ink editorial language, native CSS tokens, Japanese typographic detail, and restrained spatial motion.
 
-The reference document is treated as a design influence, not as implementation instructions. Its most useful ideas for Kyomei are the dark field, technical metadata, deliberate section rhythm, topology as a visual metaphor, and motion that reveals relationships. Kyomei should not copy its unrelated content or become a generic technology landing page.
+The reference document remains a design influence for useful metadata, deliberate section rhythm, topology as a visual metaphor, and motion that reveals relationships. The agreed Tokyo Editorial palette supersedes its dark-field and atmospheric color direction. Kyomei should not copy its unrelated content or become a generic technology landing page.
 
 ## Direction in one sentence
 
-Kyomei is a quiet signal map for finding anime that resonates: a dark, editorial index where posters are nodes, recommendations are pathways, and a watchlist is a personal constellation.
+Kyomei is a quiet signal map for finding anime that resonates: a paper-and-ink editorial index where posters are nodes, recommendations are pathways, and a watchlist is a personal constellation.
 
 ## Product intent
 
@@ -40,7 +40,7 @@ URL structure, navigation labels, API boundaries, analytics hooks, legal copy, a
 | Sequence | Discovery flow: notice, inspect, save, return |
 | Technical metadata | Useful anime facts, never fake precision or decorative jargon |
 | Edge infrastructure | Reliable, fast browsing across imperfect image and API states |
-| Atmospheric effects | A supporting layer behind posters and transitions, never the content itself |
+| Visual depth | Flat paper surfaces, fine rules, and restrained shadows that support posters and transitions |
 
 ## Design dials
 
@@ -54,14 +54,14 @@ The dials are intentionally lower than an experimental showcase. Kyomei is a pro
 
 ## Foundation and theme
 
-Use one locked dark theme across the application. Do not introduce light sections or random inverted panels during this rebrand.
+Use one paper-based light theme across Browse, Detail, Watchlist, Sign-in, and Sign-up. Defer a separate dark mode. Preserve the existing layout and typography during this palette change; composition and motion ideas elsewhere in this document are not additional implementation scope.
 
 The project currently uses React, TypeScript, Vite, and a single native CSS stylesheet. The design should continue using CSS custom properties and existing component boundaries. Do not add Tailwind, a design-system package, an animation package, or an icon library solely to execute this document. Any dependency change requires a separate implementation decision.
 
 The visual family is an honest hybrid of:
 
-- dark editorial index
-- restrained dark-tech interface
+- paper-and-ink editorial index
+- restrained flat interface with fine rules
 - Japanese typographic accents
 - poster-led media discovery
 
@@ -69,36 +69,33 @@ This is not an official design system. It is a Kyomei-owned visual language impl
 
 ## Color system
 
-Kyomei already owns violet as a recognizable accent. Retain it, but use one controlled violet accent rather than multiple competing neon treatments.
+Tokyo Editorial replaces the violet dark theme with five core colors:
 
-```css
-:root {
-  --bg: #0a0613;
-  --bg-2: #0f0a1b;
-  --surface: #171024;
-  --surface-2: #211638;
-  --line: rgba(196, 181, 253, 0.16);
-  --line-strong: rgba(196, 181, 253, 0.32);
-  --accent: #a855f7;
-  --accent-strong: #7c3aed;
-  --accent-soft: #c4b5fd;
-  --score: #f4c95d;
-  --danger: #f0abfc;
-  --ink: #f5f0ff;
-  --ink-2: #d8cef0;
-  --muted: #9484b8;
-  --muted-2: #6b5e8a;
-}
-```
+| Color | Value | Role |
+| --- | --- | --- |
+| Paper | `#F5F0E6` | Dominant page and interface background |
+| Ink | `#242424` | Typography and structural elements |
+| Vermilion | `#E85D3F` | Primary actions and selective emphasis |
+| Sage | `#87B7A5` | Saved/watchlist confirmation |
+| Gold | `#F2C66D` | Ratings and score-related information |
+
+The 55% paper / 30% ink / 10% vermilion / 5% supporting accents split is a visual hierarchy, not a literal screen-area target. Exclude anime artwork from these proportions. Paper dominates; do not add dark panels merely to satisfy the ink percentage.
+
+Derived shades are allowed for muted text, borders, hover states, and darker vermilion for small links and filled buttons. Exact derived values will be selected and verified during implementation; the five core colors remain the anchors.
 
 Color rules:
 
-- `--accent` is the only brand accent and must be consistent across routes.
+- `--accent` represents vermilion consistently across routes; readable derived variants support links and primary controls.
 - `--score` is reserved for ratings and score-related information.
-- `--danger` is reserved for destructive watchlist actions and their feedback.
-- Gradients are atmospheric and subtle. Never use a generic purple-blue mesh as the primary visual.
+- Sage communicates saved/watchlist confirmation, paired with text or an icon.
+- `--danger` is reserved for destructive actions and error feedback, with a distinct treatment and explicit messages so it is not confused with primary actions.
+- Secondary actions use paper, ink, and borders.
+- Replace colored glows and interface gradients with flat surfaces, fine rules, and restrained shadows.
+- Ink against paper has approximately 13.67:1 contrast. Core vermilion against paper is only 3.05:1 and against ink is 4.49:1; use a verified derived treatment for ordinary-size links and button labels.
+- Sage and gold fills use ink labels. Do not use them as small text or essential boundaries against paper.
+- Keep posters and banners in their original colors. Retain dark overlays where text sits over imagery and verify readability against the actual image treatment.
 - Text and controls must remain legible when poster imagery fails, loads slowly, or is high contrast.
-- Use borders and negative space before adding glow or shadow.
+- Update browser-native controls and authentication appearance to the light theme; a global token swap alone does not cover hardcoded purple treatments.
 
 ## Typography
 
@@ -154,7 +151,7 @@ The first viewport should establish Kyomei as a living index, not a marketing he
 
 - Keep the brand and navigation on one compact top line.
 - Use a left-aligned title and search action.
-- Let a small number of poster nodes or the existing `PosterOrbit` provide the right-side visual counterweight on wide screens.
+- Keep the existing `PosterOrbit`, its anime posters, and its spinning animation as the right-side visual counterweight on wide screens. Preserve its current responsive and reduced-motion behavior. The palette change may update surrounding colors, borders, and effects, but must not remove the orbit or replace its animation with a static treatment.
 - Keep the first action visible without scrolling.
 - Place trending or the most relevant discovery content directly after the search moment.
 - Retain section rhythm, but vary section composition so every block does not look like the same grid.
@@ -222,7 +219,7 @@ Use badges for score, format, status, and small counts. Do not place explanatory
 
 Keep two roles:
 
-- primary: filled violet action for search or the main watchlist action
+- primary: filled vermilion-family action with a verified readable label for search or the main watchlist action
 - secondary: outlined action for retry, clear, back, or lower-priority navigation
 
 Every button needs visible hover, focus, active, disabled, and loading behavior where applicable. Labels must not wrap at desktop widths.
@@ -273,22 +270,21 @@ Avoid invented technical claims, fake metrics, unexplained system language, and 
 
 ## Implementation sequence
 
-This document defines direction for a later rebrand. When implementation begins, use this order:
+For the agreed palette change, preserve layout, typography, spacing, and motion behavior. When implementation begins, use this order:
 
-1. Audit current tokens, routes, components, and responsive gaps.
-2. Formalize color, spacing, typography, radius, and breakpoint tokens without changing product behavior.
-3. Rework the shared topbar, buttons, chips, focus states, and card primitives.
-4. Recompose the home first viewport and section rhythm.
-5. Align detail and watchlist surfaces to the shared primitives.
-6. Add purposeful motion with reduced-motion fallbacks.
-7. Verify loading, empty, error, image-failure, keyboard, and mobile states.
+1. Audit color tokens, hardcoded purple treatments, image overlays, browser color scheme, and authentication appearance.
+2. Define the core palette and readable derived shades without changing product behavior.
+3. Apply flat surfaces, fine rules, restrained shadows, and consistent action and status colors to shared components.
+4. Align Browse, Detail, Watchlist, Sign-in, and Sign-up with the shared palette.
+5. Verify contrast, loading, empty, error, image-failure, keyboard, and mobile states.
 
 ## Non-goals and guardrails
 
-- Do not flatten Kyomei into a generic dark SaaS dashboard.
+- Preserve Kyomei's poster-led editorial identity across the paper-based theme.
 - Do not replace the anime poster experience with abstract gradients or fake product screenshots.
 - Do not remove the Japanese-editorial character in pursuit of a neutral technology aesthetic.
-- Do not introduce a second accent palette or mixed radius language.
+- Keep vermilion, sage, and gold scoped to their agreed roles and preserve the existing radius language.
+- Defer dark mode, layout recomposition, typography changes, and new motion work beyond this palette change.
 - Do not change route structure, API usage, persistence, or primary navigation labels as part of visual work.
 - Do not use fake-precise popularity numbers or unsupported claims in the interface.
 - Do not make every section a card grid, every label uppercase, or every interaction animated.
@@ -296,8 +292,11 @@ This document defines direction for a later rebrand. When implementation begins,
 ## Pre-flight checklist
 
 - [ ] The first viewport communicates discovery and exposes the primary action.
-- [ ] The dark theme is consistent across Browse, Detail, and Watchlist.
-- [ ] Violet is the single brand accent, with score and danger colors scoped to their roles.
+- [ ] The paper-based light theme is consistent across Browse, Detail, Watchlist, Sign-in, and Sign-up, including browser-native controls.
+- [ ] Vermilion marks primary actions, sage marks saved/watchlist confirmation, gold marks ratings, and errors have a distinct treatment.
+- [ ] Derived shades, text, control boundaries, and focus indicators meet contrast requirements on their actual backgrounds.
+- [ ] Interface glows and colored gradients are replaced; original artwork colors and necessary dark text overlays are retained.
+- [ ] The color proportions guide hierarchy without imposing literal area quotas or counting artwork.
 - [ ] Cards, controls, pills, and circular icon actions follow the documented shape rules.
 - [ ] Desktop navigation stays on one line and mobile behavior is explicit.
 - [ ] Cards use real poster imagery and remain useful when imagery fails.

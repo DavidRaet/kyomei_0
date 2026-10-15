@@ -30,6 +30,8 @@ Use vermilion for the main action on each screen. Secondary actions use paper, i
 
 Keep posters and banners in their original colors. Retain dark overlays where text sits over imagery, with sufficient contrast for the text.
 
+Keep the existing spinning orbital anime posters and their animation. Preserve current responsive and reduced-motion behavior. Only the surrounding interface colors, borders, and effects change with the palette; the orbit must not be removed or made static.
+
 ## Implementation considerations
 
 Global palette tokens live in `src/index.css`, but literal purple colors, backgrounds, glows, borders, and overlays also require review. Update the browser color scheme and the separate authentication appearance in `src/auth/clerkAppearance.ts` to match.
