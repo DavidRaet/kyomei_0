@@ -70,5 +70,5 @@ Approved verification seam: rendered application pages and user interactions acr
 
 The root design document is the authoritative design direction. The palette discussion note captures the agreed color decisions.
 
-The user approved the plan and verification approach. This spec is published to the configured local Markdown tracker and is ready for implementation. No application implementation has begun.
+The user approved the plan and verification approach. This spec is published to the configured local Markdown tracker and is ready for implementation. Implementation completed in ticket order; see [combined verification](verification.md) for results and coverage limits.
 

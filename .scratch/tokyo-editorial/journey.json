@@ -1,0 +1,11 @@
+{
+  "searchToDetail": "Frieren: Beyond Journey’s End",
+  "backToBrowse": true,
+  "signUpEmptyValidation": true,
+  "disabled": {
+    "bg": "rgb(105, 97, 86)",
+    "color": "rgb(255, 250, 242)",
+    "opacity": "1"
+  },
+  "mobileReturnToBrowse": true
+}

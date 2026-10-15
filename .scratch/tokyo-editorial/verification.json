@@ -1,0 +1,358 @@
+{
+  "errors": [],
+  "contrast": [
+    {
+      "label": "saved label",
+      "fg": [
+        36,
+        36,
+        36
+      ],
+      "bg": [
+        117,
+        165,
+        146
+      ],
+      "border": "rgb(36, 36, 36)",
+      "outline": "rgb(36, 36, 36)",
+      "opacity": "1",
+      "ratio": 5.583442686446266
+    },
+    {
+      "label": "saved hint",
+      "fg": [
+        36,
+        36,
+        36
+      ],
+      "bg": [
+        117,
+        165,
+        146
+      ],
+      "border": "rgb(36, 36, 36)",
+      "outline": "rgb(36, 36, 36)",
+      "opacity": "1",
+      "ratio": 5.583442686446266
+    },
+    {
+      "label": "detail muted metadata",
+      "fg": [
+        105,
+        97,
+        86
+      ],
+      "bg": [
+        245,
+        240,
+        230
+      ],
+      "border": "rgb(105, 97, 86)",
+      "outline": "rgb(105, 97, 86)",
+      "opacity": "1",
+      "ratio": 5.3671023807144955
+    },
+    {
+      "label": "detail title",
+      "fg": [
+        36,
+        36,
+        36
+      ],
+      "bg": [
+        245,
+        240,
+        230
+      ],
+      "border": "rgb(36, 36, 36)",
+      "outline": "rgb(36, 36, 36)",
+      "opacity": "1",
+      "ratio": 13.666935784255474
+    },
+    {
+      "label": "primary save label",
+      "fg": [
+        255,
+        250,
+        242
+      ],
+      "bg": [
+        143,
+        45,
+        28
+      ],
+      "border": "rgb(255, 250, 242)",
+      "outline": "rgb(255, 250, 242)",
+      "opacity": "1",
+      "ratio": 7.893752179751578
+    },
+    {
+      "label": "primary save hover",
+      "fg": [
+        255,
+        250,
+        242
+      ],
+      "bg": [
+        143,
+        45,
+        28
+      ],
+      "border": "rgb(255, 250, 242)",
+      "outline": "rgb(255, 250, 242)",
+      "opacity": "1",
+      "ratio": 7.893752179751578
+    },
+    {
+      "label": "watchlist rating",
+      "fg": [
+        36,
+        36,
+        36
+      ],
+      "bg": [
+        242,
+        198,
+        109
+      ],
+      "border": "rgb(36, 36, 36)",
+      "outline": "rgb(36, 36, 36)",
+      "opacity": "1",
+      "ratio": 9.664052389678515
+    },
+    {
+      "label": "watchlist progress",
+      "fg": [
+        105,
+        97,
+        86
+      ],
+      "bg": [
+        245,
+        240,
+        230
+      ],
+      "border": "rgb(105, 97, 86)",
+      "outline": "rgb(105, 97, 86)",
+      "opacity": "1",
+      "ratio": 5.3671023807144955
+    },
+    {
+      "label": "watchlist placeholder",
+      "fg": [
+        105,
+        97,
+        86
+      ],
+      "bg": [
+        250,
+        247,
+        240
+      ],
+      "border": "rgb(36, 36, 36)",
+      "outline": "rgb(36, 36, 36)",
+      "opacity": "1",
+      "ratio": 5.697501370106301
+    },
+    {
+      "label": "watchlist hovered row title",
+      "fg": [
+        36,
+        36,
+        36
+      ],
+      "bg": [
+        232,
+        224,
+        211
+      ],
+      "border": "rgb(36, 36, 36)",
+      "outline": "rgb(36, 36, 36)",
+      "opacity": "1",
+      "ratio": 11.852150543685916
+    },
+    {
+      "label": "auth input",
+      "fg": [
+        36,
+        36,
+        36
+      ],
+      "bg": [
+        250,
+        247,
+        240
+      ],
+      "border": "rgb(132, 121, 109)",
+      "outline": "rgba(0, 0, 0, 0)",
+      "opacity": "1",
+      "ratio": 14.508272775967486
+    },
+    {
+      "label": "auth placeholder",
+      "fg": [
+        105,
+        97,
+        86
+      ],
+      "bg": [
+        250,
+        247,
+        240
+      ],
+      "border": "rgb(132, 121, 109)",
+      "outline": "rgba(0, 0, 0, 0)",
+      "opacity": "1",
+      "ratio": 5.697501370106301
+    },
+    {
+      "label": "auth muted footer",
+      "fg": [
+        105,
+        97,
+        86
+      ],
+      "bg": [
+        232,
+        224,
+        211
+      ],
+      "border": "rgb(105, 97, 86)",
+      "outline": "rgb(105, 97, 86)",
+      "opacity": "1",
+      "ratio": 4.654423376517578
+    },
+    {
+      "label": "auth secondary link",
+      "fg": [
+        169,
+        56,
+        36
+      ],
+      "bg": [
+        232,
+        224,
+        211
+      ],
+      "border": "rgb(169, 56, 36)",
+      "outline": "rgb(169, 56, 36)",
+      "opacity": "1",
+      "ratio": 4.891193028256867
+    },
+    {
+      "label": "auth primary",
+      "fg": [
+        255,
+        250,
+        242
+      ],
+      "bg": [
+        169,
+        56,
+        36
+      ],
+      "border": "rgb(169, 56, 36)",
+      "outline": "rgb(255, 250, 242)",
+      "opacity": "1",
+      "ratio": 6.164580263328718
+    },
+    {
+      "label": "auth primary hover",
+      "fg": [
+        255,
+        250,
+        242
+      ],
+      "bg": [
+        143,
+        45,
+        28
+      ],
+      "border": "rgb(169, 56, 36)",
+      "outline": "rgb(255, 250, 242)",
+      "opacity": "1",
+      "ratio": 7.893752179751578
+    },
+    {
+      "label": "character role",
+      "fg": [
+        105,
+        97,
+        86
+      ],
+      "bg": [
+        250,
+        247,
+        240
+      ],
+      "border": "rgb(105, 97, 86)",
+      "outline": "rgb(105, 97, 86)",
+      "opacity": "1",
+      "ratio": 5.697501370106301
+    },
+    {
+      "label": "character name",
+      "fg": [
+        36,
+        36,
+        36
+      ],
+      "bg": [
+        250,
+        247,
+        240
+      ],
+      "border": "rgb(36, 36, 36)",
+      "outline": "rgb(36, 36, 36)",
+      "opacity": "1",
+      "ratio": 14.508272775967486
+    },
+    {
+      "label": "failed image label",
+      "fg": [
+        169,
+        56,
+        36
+      ],
+      "bg": [
+        232,
+        224,
+        211
+      ],
+      "border": "rgb(169, 56, 36)",
+      "outline": "rgb(169, 56, 36)",
+      "opacity": "1",
+      "ratio": 4.891193028256867
+    },
+    {
+      "label": "detail error heading",
+      "fg": [
+        152,
+        45,
+        64
+      ],
+      "bg": [
+        250,
+        247,
+        240
+      ],
+      "border": "rgb(152, 45, 64)",
+      "outline": "rgb(152, 45, 64)",
+      "opacity": "1",
+      "ratio": 7.048873157286724
+    }
+  ],
+  "states": [
+    "detail character and poster failures rendered",
+    "explicit detail 503 feedback",
+    "retry, loading, empty cast, missing image/synopsis"
+  ],
+  "orbitMoved": true,
+  "reducedOrbitHidden": true,
+  "authFocus": {
+    "outline": "rgb(169, 56, 36) solid 2px",
+    "offset": "2px",
+    "border": "rgb(132, 121, 109)"
+  },
+  "emptySubmissionPrevented": true
+}
