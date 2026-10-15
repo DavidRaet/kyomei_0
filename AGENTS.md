@@ -29,3 +29,20 @@ Write Vitest tests beside the unit they exercise using `*.test.ts` or `*.test.ts
 ## Commit & Pull Request Guidelines
 
 Follow the established Conventional Commit pattern: `feat: add seasonal endpoint`, `fix: handle empty results`, or `docs: update contract`. Keep commits small and focused. Pull requests should state the user-facing change, list validation commands run, link the relevant issue when available, and include screenshots for visual/UI changes. Call out API-contract or cache-TTL changes explicitly.
+
+## Agent skills
+
+### Issue tracker
+
+Track specs and tickets in local Markdown under `.scratch/<feature>/`.
+Read `docs/agents/issue-tracker.md` before tracker operations.
+
+### Triage labels
+
+Use the five default triage roles.
+Read `docs/agents/triage-labels.md` before assigning a status.
+
+### Domain docs
+
+Use one root glossary and `docs/adr/`.
+Read `docs/agents/domain.md` before domain exploration.
