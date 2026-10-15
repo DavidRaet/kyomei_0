@@ -1,0 +1,500 @@
+{
+  "checks": [
+    "Live trending and seasonal feeds render cards",
+    "Browser native controls use light scheme",
+    "Desktop orbit is visible with six posters",
+    "Orbital poster position changes with motion enabled",
+    ".brand-sub color contrast >= 4.5 (5.37)",
+    ".nav a color contrast >= 4.5 (5.64)",
+    ".hero-title color contrast >= 4.5 (13.67)",
+    ".hero-title em color contrast >= 4.5 (5.64)",
+    ".hero-tagline color contrast >= 4.5 (7.59)",
+    ".hero-eyebrow color contrast >= 4.5 (5.64)",
+    ".filter-label color contrast >= 4.5 (5.37)",
+    ".chip color contrast >= 4.5 (8.05)",
+    ".section-title .num color contrast >= 4.5 (5.64)",
+    ".section-meta color contrast >= 4.5 (5.37)",
+    ".pill color contrast >= 4.5 (6.58)",
+    ".title color contrast >= 4.5 (13.67)",
+    ".sub color contrast >= 4.5 (5.37)",
+    ".score color contrast >= 4.5 (9.66)",
+    ".type-pill color contrast >= 4.5 (8.05)",
+    ".foot color contrast >= 4.5 (5.37)",
+    ".search input color::placeholder contrast >= 4.5 (5.70)",
+    ".search-btn color contrast >= 4.5 (6.16)",
+    ".search borderTopColor contrast >= 3 (5.99)",
+    ".chip borderTopColor contrast >= 3 (3.98)",
+    ".search-btn color contrast >= 4.5 (7.89)",
+    ".search-btn outlineColor contrast >= 3 (5.64)",
+    "Selected filter exposes label and check icon",
+    ".chip.active color contrast >= 4.5 (4.89)",
+    ".filter-option.selected color contrast >= 4.5 (11.85)",
+    ".filter-option-check.on color contrast >= 4.5 (6.16)",
+    "Escape closes filter panel",
+    "Live search renders submitted title and cards",
+    "Card opens functioning detail route",
+    "Watchlist route and shared header render",
+    "sign-in shell and existing embedded form render",
+    "sign-up shell and existing embedded form render",
+    "Mobile orbit retains existing hidden behavior",
+    "Mobile page has no horizontal overflow",
+    "Reduced-motion preference hides orbit",
+    "Reduced-motion card hover does not tilt",
+    "Loading skeleton uses neutral surfaces",
+    ".state-error h3 color contrast >= 4.5 (7.05)",
+    ".state-error p color contrast >= 4.5 (8.05)",
+    ".state-error .btn color contrast >= 4.5 (14.51)",
+    "Feed error message and retry recover into cards",
+    ".state p color contrast >= 4.5 (8.05)",
+    ".state .btn color contrast >= 4.5 (14.51)",
+    "Empty search can reset back to discovery",
+    ".media-fallback color contrast >= 4.5 (4.89)",
+    "Failed poster retains readable title fallback",
+    "No uncaught errors during live Chrome journeys"
+  ],
+  "browsers": {
+    "Chrome": "155.0.8059.40",
+    "Firefox": "Discovery smoke check passed with installed Playwright Firefox; image loading incomplete at capture. No complete interaction or mobile coverage.",
+    "Safari": "Unavailable on this Windows host. Installed WebKit automation did not complete startup; no WebKit coverage claimed."
+  },
+  "contrast": [
+    {
+      "selector": ".brand-sub",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(105, 97, 86)",
+      "background": [
+        245,
+        240,
+        230
+      ],
+      "ratio": 5.3671023807144955
+    },
+    {
+      "selector": ".nav a",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(169, 56, 36)",
+      "background": [
+        245,
+        240,
+        230
+      ],
+      "ratio": 5.640125880884706
+    },
+    {
+      "selector": ".hero-title",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(36, 36, 36)",
+      "background": [
+        245,
+        240,
+        230
+      ],
+      "ratio": 13.666935784255474
+    },
+    {
+      "selector": ".hero-title em",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(169, 56, 36)",
+      "background": [
+        245,
+        240,
+        230
+      ],
+      "ratio": 5.640125880884706
+    },
+    {
+      "selector": ".hero-tagline",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(81, 75, 67)",
+      "background": [
+        245,
+        240,
+        230
+      ],
+      "ratio": 7.585776408598124
+    },
+    {
+      "selector": ".hero-eyebrow",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(169, 56, 36)",
+      "background": [
+        245,
+        240,
+        230
+      ],
+      "ratio": 5.640125880884706
+    },
+    {
+      "selector": ".filter-label",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(105, 97, 86)",
+      "background": [
+        245,
+        240,
+        230
+      ],
+      "ratio": 5.3671023807144955
+    },
+    {
+      "selector": ".chip",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(81, 75, 67)",
+      "background": [
+        250,
+        247,
+        240
+      ],
+      "ratio": 8.052757040113368
+    },
+    {
+      "selector": ".section-title .num",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(169, 56, 36)",
+      "background": [
+        245,
+        240,
+        230
+      ],
+      "ratio": 5.640125880884706
+    },
+    {
+      "selector": ".section-meta",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(105, 97, 86)",
+      "background": [
+        245,
+        240,
+        230
+      ],
+      "ratio": 5.3671023807144955
+    },
+    {
+      "selector": ".pill",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(81, 75, 67)",
+      "background": [
+        232,
+        224,
+        211
+      ],
+      "ratio": 6.578487336497273
+    },
+    {
+      "selector": ".title",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(36, 36, 36)",
+      "background": [
+        245,
+        240,
+        230
+      ],
+      "ratio": 13.666935784255474
+    },
+    {
+      "selector": ".sub",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(105, 97, 86)",
+      "background": [
+        245,
+        240,
+        230
+      ],
+      "ratio": 5.3671023807144955
+    },
+    {
+      "selector": ".score",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(36, 36, 36)",
+      "background": [
+        242,
+        198,
+        109
+      ],
+      "ratio": 9.664052389678515
+    },
+    {
+      "selector": ".type-pill",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(81, 75, 67)",
+      "background": [
+        250,
+        247,
+        240
+      ],
+      "ratio": 8.052757040113368
+    },
+    {
+      "selector": ".foot",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(105, 97, 86)",
+      "background": [
+        245,
+        240,
+        230
+      ],
+      "ratio": 5.3671023807144955
+    },
+    {
+      "selector": ".search input",
+      "property": "color",
+      "pseudo": "::placeholder",
+      "minimum": 4.5,
+      "foreground": "rgb(105, 97, 86)",
+      "background": [
+        250,
+        247,
+        240
+      ],
+      "ratio": 5.697501370106301
+    },
+    {
+      "selector": ".search-btn",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(255, 250, 242)",
+      "background": [
+        169,
+        56,
+        36
+      ],
+      "ratio": 6.164580263328718
+    },
+    {
+      "selector": ".search",
+      "property": "borderTopColor",
+      "pseudo": null,
+      "minimum": 3,
+      "foreground": "rgb(169, 56, 36)",
+      "background": [
+        250,
+        247,
+        240
+      ],
+      "ratio": 5.987332205433857
+    },
+    {
+      "selector": ".chip",
+      "property": "borderTopColor",
+      "pseudo": null,
+      "minimum": 3,
+      "foreground": "rgb(132, 121, 109)",
+      "background": [
+        250,
+        247,
+        240
+      ],
+      "ratio": 3.975659704063829
+    },
+    {
+      "selector": ".search-btn",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(255, 250, 242)",
+      "background": [
+        143,
+        45,
+        28
+      ],
+      "ratio": 7.893752179751578
+    },
+    {
+      "selector": ".search-btn",
+      "property": "outlineColor",
+      "pseudo": null,
+      "minimum": 3,
+      "foreground": "rgb(169, 56, 36)",
+      "background": [
+        245,
+        240,
+        230
+      ],
+      "ratio": 5.640125880884706
+    },
+    {
+      "selector": ".chip.active",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(169, 56, 36)",
+      "background": [
+        232,
+        224,
+        211
+      ],
+      "ratio": 4.891193028256867
+    },
+    {
+      "selector": ".filter-option.selected",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(36, 36, 36)",
+      "background": [
+        232,
+        224,
+        211
+      ],
+      "ratio": 11.852150543685916
+    },
+    {
+      "selector": ".filter-option-check.on",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(255, 250, 242)",
+      "background": [
+        169,
+        56,
+        36
+      ],
+      "ratio": 6.164580263328718
+    },
+    {
+      "selector": ".state-error h3",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(152, 45, 64)",
+      "background": [
+        250,
+        247,
+        240
+      ],
+      "ratio": 7.048873157286724
+    },
+    {
+      "selector": ".state-error p",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(81, 75, 67)",
+      "background": [
+        250,
+        247,
+        240
+      ],
+      "ratio": 8.052757040113368
+    },
+    {
+      "selector": ".state-error .btn",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(36, 36, 36)",
+      "background": [
+        250,
+        247,
+        240
+      ],
+      "ratio": 14.508272775967486
+    },
+    {
+      "selector": ".state p",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(81, 75, 67)",
+      "background": [
+        250,
+        247,
+        240
+      ],
+      "ratio": 8.052757040113368
+    },
+    {
+      "selector": ".state .btn",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(36, 36, 36)",
+      "background": [
+        250,
+        247,
+        240
+      ],
+      "ratio": 14.508272775967486
+    },
+    {
+      "selector": ".media-fallback",
+      "property": "color",
+      "pseudo": null,
+      "minimum": 4.5,
+      "foreground": "rgb(169, 56, 36)",
+      "background": [
+        232,
+        224,
+        211
+      ],
+      "ratio": 4.891193028256867
+    }
+  ],
+  "api": [
+    {
+      "path": "/api/v1/anime/seasonal",
+      "status": 200
+    },
+    {
+      "path": "/api/v1/anime/trending",
+      "status": 200
+    },
+    {
+      "path": "/api/v1/anime/trending",
+      "status": 200
+    },
+    {
+      "path": "/api/v1/anime/seasonal",
+      "status": 200
+    },
+    {
+      "path": "/api/v1/anime/search",
+      "status": 200
+    },
+    {
+      "path": "/api/v1/anime/52991",
+      "status": 200
+    },
+    {
+      "path": "/api/v1/anime/52991",
+      "status": 200
+    },
+    {
+      "path": "/api/v1/anime/52991/characters",
+      "status": 200
+    }
+  ],
+  "console": []
+}

@@ -5,7 +5,7 @@ interface ErrorStateProps {
 
 export function ErrorState({ message, onRetry }: ErrorStateProps) {
   return (
-    <div className="state">
+    <div className="state state-error">
       <div className="jp-big">圏外</div>
       <h3>Signal lost</h3>
       <p>

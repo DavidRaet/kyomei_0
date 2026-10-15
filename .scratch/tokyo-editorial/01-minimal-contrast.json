@@ -1,0 +1,15 @@
+{
+  "note": "Rendered minimal-card fixture copied from real card markup; white artwork represents brightest possible image. Pixel samples include the overlay compositing and stacking.",
+  "pillBackground": [
+    250,
+    247,
+    240
+  ],
+  "pillRatio": 8.052757040113368,
+  "brightestOverlayBackground": [
+    70,
+    70,
+    70
+  ],
+  "overlayRatio": 9.082750829537218
+}
